@@ -1,3 +1,7 @@
+import InputValidation.IValidation;
+import InputValidation.Validator1;
+import Model.Expressions;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +11,8 @@ public class Main {
     public static void main(String[] args) {
         Main m = new Main();
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        IValidation validator = new Validator1();
+        Expressions data = new Expressions(args);
 
         m.welcomeMessage();
         String input;
@@ -24,7 +30,12 @@ public class Main {
                 case "exit" -> {
                     break mainloop;
                 }
-                default -> {/*TODO*/}
+                default -> {
+                    if(validator.validateString(input)){
+                        data.addData(input);
+                        System.out.println("Successfully added");
+                    } else System.out.println("Regex control failed, please see the help section.");
+                }
             }
         }
         try {
