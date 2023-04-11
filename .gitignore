@@ -5,3 +5,5 @@ venv/
 *.iws
 *.iml
 *.xml
+
+/out
