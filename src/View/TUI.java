@@ -3,6 +3,7 @@ package View;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class TUI implements IView{
     BufferedReader input;
@@ -11,8 +12,10 @@ public class TUI implements IView{
         input = new BufferedReader(new InputStreamReader(System.in));
     }
     @Override
-    public void display() {
-
+    public void displayBeliefs(List<String> list) {
+        for (String s : list){
+            System.out.println(s);
+        }
     }
 
     @Override

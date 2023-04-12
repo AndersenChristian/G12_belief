@@ -1,9 +1,10 @@
 package View;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IView {
-    void display();
+    void displayBeliefs(List<String> list);
     void displayCommands();
     void displayWelcome();
     void displayExit();
