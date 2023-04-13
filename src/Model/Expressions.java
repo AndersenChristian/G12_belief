@@ -3,6 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Expressions implements IExpressions{
     ArrayList<String> list = new ArrayList<>();
@@ -18,19 +19,13 @@ public class Expressions implements IExpressions{
     }
 
     @Override
-    public void removeData(String s) throws Exception {
-        if (s == null) throw new NullPointerException();
-        for(String data: this.list){
-            if(data.equals(s)){
-                list.remove(data);
-                return;
-            }
-        }
-        throw new NoSuchFieldException();
+    public void removeDataAtIndex(int index) {
+        list.remove(index);
     }
 
     @Override
-    public void removeDataAt(int index) throws Exception {
-
+    public int getIndex(String s) {
+        return IntStream.range(0,list.size()).filter(i -> s.equals(list.get(i))).findFirst().orElse(-1);
     }
+
 }

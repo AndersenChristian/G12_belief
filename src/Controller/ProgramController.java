@@ -1,7 +1,6 @@
 package Controller;
 
 import InputValidation.IValidation;
-import InputValidation.Validator1;
 import Model.Expressions;
 import Model.IExpressions;
 import View.IView;
@@ -10,7 +9,7 @@ import View.TUI;
 import java.io.IOException;
 
 public class ProgramController {
-    private final IValidation validator = new Validator1();
+    private final IValidation validator = s -> true; //temp way to do it until actual validation class is made
     private final IExpressions data = new Expressions();
     private final IView view = new TUI();
     public void primary(String[] args){
