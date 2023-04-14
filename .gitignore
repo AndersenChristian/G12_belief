@@ -7,4 +7,6 @@ target/
 *.iml
 *.xml
 
+!pom.xml
+
 /out
