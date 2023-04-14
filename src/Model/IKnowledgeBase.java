@@ -1,6 +1,6 @@
 package Model;
 
-public interface IExpressions {
+public interface IKnowledgeBase {
     void addData(String[] list);
     void addData(String s);
     void removeDataAtIndex(int index);
