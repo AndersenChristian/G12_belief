@@ -28,4 +28,14 @@ public class Expressions implements IExpressions{
         return IntStream.range(0,list.size()).filter(i -> s.equals(list.get(i))).findFirst().orElse(-1);
     }
 
+    @Override
+    public String getDataAtIndex(int index) {
+        return list.get(index);
+    }
+
+    @Override
+    public String[] getAllData() {
+        return list.toArray(String[]::new);
+    }
+
 }
