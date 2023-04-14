@@ -28,11 +28,11 @@ public class TUI implements IView{
         System.out.println("All variable must start with a uppercase letter and can be trailed by as lowercase letters as needed\n");
 
         System.out.println("Operator syntax:");
-        System.out.println("a\tAnd");
-        System.out.println("o\tOr");
-        System.out.println("i\tImplies");
-        System.out.println("b\tBiimplication");
-        System.out.println("n\tnegation");
+        System.out.println("&\tAnd");
+        System.out.println("|\tOr");
+        System.out.println("=>\tImplies");
+        System.out.println("<=>\tBiimplication");
+        System.out.println("~\tnegation");
         System.out.println("()\t must all be closed");
     }
 
