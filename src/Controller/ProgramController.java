@@ -40,6 +40,7 @@ public class ProgramController {
 
                     }
                     else if(validator.validateString(input)){
+
                         data.addData(input);
                         System.out.println("Successfully added");
                     } else System.out.println("Regex control failed, please see the help section.");
