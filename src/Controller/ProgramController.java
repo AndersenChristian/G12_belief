@@ -7,6 +7,7 @@ import View.IView;
 import View.TUI;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class ProgramController {
     private final IValidation validator = s -> true; //temp way to do it until actual validation class is made
@@ -35,7 +36,10 @@ public class ProgramController {
                     break mainloop;
                 }
                 default -> {
-                    if(validator.validateString(input)){
+                    if(Pattern.matches("rm[A-Z][a-z]*", input)){
+
+                    }
+                    else if(validator.validateString(input)){
                         data.addData(input);
                         System.out.println("Successfully added");
                     } else System.out.println("Regex control failed, please see the help section.");
