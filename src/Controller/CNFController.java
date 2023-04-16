@@ -21,11 +21,8 @@ import java.util.stream.Stream;
  */
 public class CNFController {
 
-    private final String iff = "<=>";
-    private final String imp = "=>";
-    private final String not = "~";
-    private final String or = "|";
-    private final String and = "&";
+    private final String iff = "<=>", imp = "=>", not = "~", or = "|", and = "&";
+
     private final List<String> possible = Arrays.asList(iff, or, not, imp, and);
 
     private BiFunction<CNF, CNF, CNF> generatorArrows(String choice) {
