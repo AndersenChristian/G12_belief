@@ -37,4 +37,9 @@ public class KnowledgeBase implements IKnowledgeBase {
         return expressions.toArray(String[]::new);
     }
 
+    @Override
+    public String toString() {
+        return expressions.toString();
+    }
+
 }
