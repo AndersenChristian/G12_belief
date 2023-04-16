@@ -1,5 +1,7 @@
 package View;
 
+import Model.IKnowledgeBase;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -8,6 +10,7 @@ public interface IView {
     void displayCommands();
     void displayWelcome();
     void displayExit();
+    void displayKnowledgeBase(IKnowledgeBase data);
 
 
     String getCommand() throws IOException;
