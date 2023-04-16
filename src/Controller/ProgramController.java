@@ -1,5 +1,6 @@
 package Controller;
 
+import Controller.CNF.CNF;
 import InputValidation.IValidation;
 import Model.KnowledgeBase;
 import Model.IKnowledgeBase;
@@ -37,13 +38,16 @@ public class ProgramController {
                 case "exit" -> {
                     break mainloop;
                 }
+                case "view" -> {
+                    this.view.displayKnowledgeBase(data);
+                }
                 default -> {
                     if(Pattern.matches("rm[A-Z][a-z]*", input)){
 
                     }
                     else if(validator.validateString(input)){
-                        List<String> cnf = CNFController.convertToCNF(List.of(input.split("\n")));
-                        cnf.forEach(data::addData);
+                        List<CNF> cnf = CNFController.convertToCNF(List.of(input.split("\n")));
+                        cnf.forEach(expr -> data.addData(expr.toInputFormat()));
                         System.out.println("Successfully added");
                     } else System.out.println("Regex control failed, please see the help section.");
                 }
