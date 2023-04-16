@@ -1,9 +1,12 @@
 venv/
 .idea/
+target/
 
 *.pyc
 *.iws
 *.iml
 *.xml
+
+!pom.xml
 
 /out

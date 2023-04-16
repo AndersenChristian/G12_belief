@@ -1,5 +1,7 @@
 package View;
 
+import Model.IKnowledgeBase;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,16 +25,17 @@ public class TUI implements IView{
         System.out.println("Commands:");
         System.out.println("help - obviusly");
         System.out.println("exit - close the program");
+        System.out.println("view - Display all entries in knowledge base");
 
         System.out.println("Naming syntax:");
         System.out.println("All variable must start with a uppercase letter and can be trailed by as lowercase letters as needed\n");
 
         System.out.println("Operator syntax:");
-        System.out.println("a\tAnd");
-        System.out.println("o\tOr");
-        System.out.println("i\tImplies");
-        System.out.println("b\tBiimplication");
-        System.out.println("n\tnegation");
+        System.out.println("&\tAnd");
+        System.out.println("|\tOr");
+        System.out.println("=>\tImplies");
+        System.out.println("<=>\tBiimplication");
+        System.out.println("~\tnegation");
         System.out.println("()\t must all be closed");
     }
 
@@ -51,6 +54,11 @@ public class TUI implements IView{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void displayKnowledgeBase(IKnowledgeBase data) {
+        System.out.println(data.toString());
     }
 
     @Override
