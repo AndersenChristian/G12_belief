@@ -15,6 +15,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Class that converts logical expressions to CNF-form.
+ * Used and modified code from https://github.com/annrpom/cnf-converter
+ */
 public class CNFController {
 
     private final String iff = "<=>";
