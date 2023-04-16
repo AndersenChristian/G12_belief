@@ -17,7 +17,8 @@ public class Atomic extends CNF {
         if (val == ' ') {
             return isTrue ? "TRUE" : "FALSE";
         } else {
-            return "\'" + val + "\'";
+            //return "\'" + val + "\'";
+            return String.valueOf(val);
         }
     }
 

@@ -201,6 +201,103 @@ public class CNFController {
         }
     }
 
+    private List<String> getVariables(String input) {
+        return Arrays.stream(input.split(possible.toString()))
+                .map(String::trim)
+                .filter(str -> !str.isEmpty())
+                .toList();
+    }
+
+    private String getOperator(String input) {
+        String regex = possible.stream()
+                .map(s -> "\\" + s)
+                .collect(Collectors.joining("|", "[^", "]+"));
+        return Arrays.stream(input.split(regex))
+                .map(String::trim)
+                .filter(str -> !str.isEmpty())
+                .findFirst()
+                .get();
+    }
+
+    private List<String> stringToCNF(String input) {
+        List<String> terms = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
+        terms.add(input);
+
+        if (possible.stream().anyMatch(input::contains)) {
+            List<String> split = getVariables(input);
+            //String subterm = noParen(input);
+            temp.addAll(split);
+            for (String s : temp) {
+                if (s.length() == 1) {
+                    terms.add(s);
+                } else {
+                    terms.addAll(stringTo(s));
+                }
+            }
+        }
+        Set<String> noDupes = new HashSet<>(terms);
+        return noDupes.stream().sorted((s1, s2) -> s2.length() - s1.length()).collect(Collectors.toList());
+    }
+
+    private List<CNF> toClassCNF(List<String> terms) {
+        if (terms.size() > 0) {
+            String goal = terms.remove(0);
+            List<CNF> converted = toClassCNF(terms);
+            var map = hash(converted);
+            if (goal.length() == 1) {
+                converted.add(0, new Atomic(goal.charAt(0)));
+            } else {
+                if (goal.equals("TRUE")) {
+                    converted.add(0, new Atomic(true, ""));
+                } else if (goal.equals("FALSE")) {
+                    converted.add(0, new Atomic(false, ""));
+                } else {
+                    String operator = getOperator(goal);
+                    List<String> variables = getVariables(goal);
+                    switch (operator) {
+                        case iff, imp -> {
+                            var constructor = arrowsCNF(operator);
+                            String left = variables.get(0);
+                            String right = variables.get(1);
+                            converted.add(0, constructor.apply(map.get(left), map.get(right)));
+                        }
+                        case not -> converted.add(0, new Not(map.get(variables.get(0))));
+                        case and, or -> {
+                            var constructor = andor(operator);
+                            ArrayList<CNF> cnfed = new ArrayList<>();
+                            for (String s : variables) {
+                                cnfed.add(map.get(s));
+                            }
+                            converted.add(0, constructor.apply(cnfed));
+                        }
+                        default -> System.out.println("hate");
+                    }
+                }
+            }
+            return converted;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+    public List<String> convertToCNF(List<String> input) {
+        Stream<String> s = input.stream();
+        List<CNF> cnf = s.map(this::stringToCNF)
+                .map(this::toClassCNF)
+                .map((ls) -> ls.get(0))
+                .map(CNF::convert)
+                .map(CNF::simplify)
+                .toList();
+
+
+        System.out.println("Before conversion, the sentence is:");
+        System.out.println(input);
+        System.out.println("Converting this to CNF gives you:");
+        System.out.println(cnf);
+
+        return new ArrayList<>();
+    }
+
 
     // the program itself
     public static void main(String[] args) {
