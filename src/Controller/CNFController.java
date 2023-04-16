@@ -113,6 +113,38 @@ public class CNFController {
         }
     }
 
+    private <E> BiFunction<CNF, CNF, CNF> arrowsCNF(String choice) {
+        try {
+            if (choice.equals(iff)) {
+                return Iff::new;
+            } else if (choice.equals(imp)) {
+                return Imp::new;
+            } else {
+                throw new NoneTypeE();
+            }
+        } catch (NoneTypeE e) {
+            e.printStackTrace();
+            System.out.println("Invalid rule inputted");
+            return null;
+        }
+    }
+
+    private <E> Function<ArrayList<CNF>, CNF> andorCNF(String choice) {
+        try {
+            if (choice.equals(and)) {
+                return And::new;
+            } else if (choice.equals(or)) {
+                return Or::new;
+            } else {
+                throw new NoneTypeE();
+            }
+        } catch (NoneTypeE e) {
+            e.printStackTrace();
+            System.out.println("Invalid rule inputted");
+            return null;
+        }
+    }
+
     static Map<String, CNF> hash(List<CNF> terms) {
         Map<String, CNF> map = new HashMap<>();
         for (CNF t : terms) {
