@@ -29,6 +29,11 @@ public class Imp implements CNF {
     }
 
     @Override
+    public String toInputFormat() {
+        return left.toSAT() + "=>" + right.toSAT();
+    }
+
+    @Override
     public CNF simplify() {
         // cannot simply if
         return this;

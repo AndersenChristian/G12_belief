@@ -1,6 +1,7 @@
 package Controller.CNF;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Not implements CNF {
     private CNF value;
@@ -22,6 +23,11 @@ public class Not implements CNF {
     @Override
     public String toSAT() {
         return "¬" + "(" + value.toSAT() + ")";
+    }
+
+    @Override
+    public String toInputFormat() {
+        return "~" + value.toSAT();
     }
 
     @Override

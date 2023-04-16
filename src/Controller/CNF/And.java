@@ -35,6 +35,11 @@ public class And implements CNF {
     }
 
     @Override
+    public String toInputFormat() {
+        return phis.size() == 0 ? "TRUE" : phis.stream().map(CNF::toInputFormat).collect(Collectors.joining("&"));
+    }
+
+    @Override
     public CNF simplify() {
         ArrayList<CNF> simps = new ArrayList<>();
         for (CNF phi : phis) {

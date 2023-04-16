@@ -37,6 +37,11 @@ public class Atomic implements CNF {
     }
 
     @Override
+    public String toInputFormat() {
+        return toSAT();
+    }
+
+    @Override
     public CNF simplify() {
         // cannot simplify atomic
         return this;

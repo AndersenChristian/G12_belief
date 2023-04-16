@@ -5,7 +5,7 @@ public interface CNF {
     CNF convert();
     String toSAT();
     CNF simplify();
-    String toString();
+    String toInputFormat();
 }
 
 
