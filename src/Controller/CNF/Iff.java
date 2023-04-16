@@ -3,7 +3,7 @@ package Controller.CNF;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Iff extends CNF {
+public class Iff implements CNF {
     private CNF left;
     private CNF right;
     // same as its recent parent

@@ -1,6 +1,6 @@
 package Controller.CNF;
 
-public class Atomic extends CNF {
+public class Atomic implements CNF {
     private char val = ' ';
     private boolean isTrue;
 

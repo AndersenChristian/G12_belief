@@ -1,10 +1,11 @@
 package Controller.CNF;
 
-public abstract class CNF {
+public interface CNF {
     // methods here later
-    public abstract CNF convert();
-    public abstract String toSAT();
-    public abstract CNF simplify();
+    CNF convert();
+    String toSAT();
+    CNF simplify();
+    String toString();
 }
 
 

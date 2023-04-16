@@ -2,7 +2,7 @@ package Controller.CNF;
 
 import java.util.ArrayList;
 
-public class Not extends CNF {
+public class Not implements CNF {
     private CNF value;
 
     public Not(CNF value) {

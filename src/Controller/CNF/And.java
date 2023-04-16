@@ -3,7 +3,7 @@ package Controller.CNF;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class And extends CNF {
+public class And implements CNF {
     private ArrayList<CNF> phis;
 
     public And(ArrayList<CNF> phis) {

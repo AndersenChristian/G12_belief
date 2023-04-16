@@ -3,7 +3,7 @@ package Controller.CNF;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Or extends CNF {
+public class Or implements CNF {
     private ArrayList<CNF> phis;
 
     public Or(ArrayList<CNF> phis) {
