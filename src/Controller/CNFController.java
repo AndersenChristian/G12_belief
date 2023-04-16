@@ -18,6 +18,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CNFController {
+
+    private final String iff = "<=>";
+    private final String imp = "=>";
+    private final String not = "~";
+    private final String or = "|";
+    private final String and = "&";
+    private final List<String> possible = Arrays.asList(iff, or, not, imp, and);
+
     // helpers for my lovely streams
     static String noParen(String input) {
         int begin = input.indexOf("(");
