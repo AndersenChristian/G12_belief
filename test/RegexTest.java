@@ -12,5 +12,9 @@ public class RegexTest {
         for (String s: test) {
             Assert.assertTrue(validation.validateString(s));
         }
+        test = new String[]{"|", "", "A~"};
+        for (String s: test) {
+            Assert.assertFalse(validation.validateString(s));
+        }
     }
 }

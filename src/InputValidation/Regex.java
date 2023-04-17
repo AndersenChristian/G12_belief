@@ -14,11 +14,4 @@ public class Regex implements IValidation{
     public boolean validateString(String s) {
         return regex.matcher(s).matches();
     }
-
-    String test = "A&~B";
-    public boolean testString(){
-        System.out.println(regex.toString());
-        System.out.println(test);
-        return regex.matcher(test).matches();
-    }
 }
