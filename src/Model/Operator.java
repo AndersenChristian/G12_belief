@@ -1,6 +1,6 @@
 package Model;
 
-public enum Symbol {
+public enum Operator {
     OR("|"),
     AND("&"),
     NOT("~"),
@@ -9,11 +9,11 @@ public enum Symbol {
 
     private final String SYMBOL;
 
-    Symbol(String s) {
+    Operator(String s) {
         this.SYMBOL = s;
     }
 
-    public String getSYMBOL() {
+    public String getOperator() {
         return this.SYMBOL;
     }
 }

@@ -127,7 +127,7 @@ public class CNFController {
      * @param terms list of terms
      * @return converted list of CNF-objects
      */
-    private List<CNF> toClass(List<String> terms) {
+    private List<CNF> toObjects(List<String> terms) {
         if (terms.size() > 0) {
             String goal = terms.remove(0);
             List<CNF> converted = toClass(terms);
@@ -176,7 +176,7 @@ public class CNFController {
     public List<CNF> convertToCNF(List<String> input) {
         Stream<String> s = input.stream();
         return s.map(this::toListOfSortedTerms)
-                .map(this::toClass)
+                .map(this::toObjects)
                 .map((ls) -> ls.get(0))
                 .map(CNF::convert)
                 .map(CNF::simplify)
