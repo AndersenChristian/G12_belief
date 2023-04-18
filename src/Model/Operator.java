@@ -4,8 +4,8 @@ public enum Symbol {
     OR("|"),
     AND("&"),
     NOT("~"),
-    IFF("=>"),
-    IMP("<=>");
+    IFF("<=>"),
+    IMP("=>");
 
     private final String SYMBOL;
 
