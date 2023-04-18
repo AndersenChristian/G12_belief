@@ -6,19 +6,23 @@ import java.util.stream.IntStream;
 
 public class KnowledgeBase implements IKnowledgeBase {
     ArrayList<String> expressions = new ArrayList<>();
+    private int size = 0;
 
     @Override
     public void addData(String[] list) {
+        size += list.length;
         this.expressions.addAll(List.of(list));
     }
 
     @Override
     public void addData(String s){
+        size++;
         this.expressions.add(s);
     }
 
     @Override
     public void removeDataAtIndex(int index) {
+        size--;
         expressions.remove(index);
     }
 
@@ -28,6 +32,11 @@ public class KnowledgeBase implements IKnowledgeBase {
                 .filter(i -> s.equals(expressions.get(i)))
                 .findFirst()
                 .orElse(-1);
+    }
+
+    @Override
+    public int getSize() {
+        return this.size;
     }
 
     @Override
