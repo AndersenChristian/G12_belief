@@ -42,9 +42,6 @@ public class ProgramController {
                 case "view" -> {
                     this.view.displayKnowledgeBase(data);
                 }
-                case "test" -> {
-                    System.out.println(((Regex) validator).testString());
-                }
                 default -> {
                     if(Pattern.matches("rm[A-Z][a-z]*", input)){
 

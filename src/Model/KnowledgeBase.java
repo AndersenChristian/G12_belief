@@ -24,7 +24,10 @@ public class KnowledgeBase implements IKnowledgeBase {
 
     @Override
     public int getIndex(String s) {
-        return IntStream.range(0, expressions.size()).filter(i -> s.equals(expressions.get(i))).findFirst().orElse(-1);
+        return IntStream.range(0, expressions.size())
+                .filter(i -> s.equals(expressions.get(i)))
+                .findFirst()
+                .orElse(-1);
     }
 
     @Override
