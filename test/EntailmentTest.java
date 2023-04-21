@@ -2,7 +2,7 @@ import Controller.EntailmentCheck;
 import Controller.Strategy;
 import Model.IKnowledgeBase;
 import Model.KnowledgeBase;
-import Model.Symbol;
+import Model.Operator;
 import org.junit.Test;
 
 public class EntailmentTest {
@@ -11,7 +11,7 @@ public class EntailmentTest {
     @Test
     public void ecTest(){
         IKnowledgeBase kb = new KnowledgeBase();
-        kb.addData(new String[]{"A" + Symbol.OR.getSYMBOL() + "B",Symbol.NOT.getSYMBOL() + "A"});
+        kb.addData(new String[]{"A" + Operator.OR.getOperator() + "B",Operator.NOT.getOperator() + "A"});
         ec.removeEntailments(kb);
         for(String s: kb.getAllData()){
             System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
@@ -19,7 +19,7 @@ public class EntailmentTest {
         System.out.println();
 
         kb = new KnowledgeBase();
-        kb.addData(new String[]{"A" + Symbol.OR.getSYMBOL() + "B",Symbol.NOT.getSYMBOL() + "B",Symbol.NOT.getSYMBOL() + "A"});
+        kb.addData(new String[]{"A" + Operator.OR.getOperator() + "B",Operator.NOT.getOperator() + "B",Operator.NOT.getOperator() + "A"});
         ec.removeEntailments(kb);
         for(String s: kb.getAllData()){
             System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");

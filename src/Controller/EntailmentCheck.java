@@ -1,11 +1,12 @@
 package Controller;
 
 import Model.IKnowledgeBase;
-import Model.Symbol;
+import Model.Operator;
 
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class EntailmentCheck {
     Strategy strategy;
@@ -24,7 +25,7 @@ public class EntailmentCheck {
         Queue<String> queue = new ArrayDeque<>();
         List<Data> toRemove = new ArrayList<>();
         for(Data d : remainClaus){
-            if(!d.claus.contains(Symbol.OR.getSYMBOL())){
+            if(!d.claus.contains(Operator.OR.getOperator())){
                 char control = d.claus.length() == 1 ? d.claus.charAt(0) : d.claus.charAt(1);
                 boolean success = true;
                 for(String s : queue){
@@ -44,76 +45,87 @@ public class EntailmentCheck {
 
         // While que is not empty, Pop
             while(queue.size() > 0){
+                if (remainClaus.isEmpty())
+                    break;
 
-            String queuepop = queue.remove();
-            Boolean isNegated = queuepop.length() > 1;
+                String queuepop = queue.remove();
+                Boolean isNegated = queuepop.length() > 1;
 
-            // If negated, check for symbol instead of negated symbol
-            String checkedSymbol = isNegated ? queuepop.substring(1) : queuepop;
+                // If negated, check for symbol instead of negated symbol
+                String checkedSymbol = isNegated ? queuepop.substring(1) : queuepop;
 
-            // Check each occurance of the symbol:
-            // If they have the same negation, they are accepted
-            // If they don't, then they must be dependant on another variable
-            // If they are only dependant on the negated symbol of the que, then it is a contradiction
-            /*
-            remainClaus.forEach(d -> {
-                // Contain checkedSymbol?
-                if (d.claus.contains(checkedSymbol)){
-                    if (isNegated){
-                        // remove
-                        remainClaus.remove(d);
+            /*for(Data d : remainClaus.stream().filter(d -> d.claus.contains(checkedSymbol)).toList()){
+                //contains the exact same
+                if((isNegated && d.claus.contains(Operator.NOT.getOperator() + checkedSymbol)) || (!isNegated && !d.claus.contains(Operator.NOT.getOperator() + checkedSymbol)))
+                    // Clause is proven
+                    data.removeDataAtIndex(data.getIndex(d.claus));
+                else{
+                    // Clauses are trimmed of symbol
+                    if(isNegated) {
+                        d.claus = d.claus.replace(checkedSymbol + Operator.OR.getOperator(), "");
                     }
                     else {
-                        // trim substring
-                        d.claus.replace(checkedSymbol,"");
+                        d.claus = d.claus.replace(Operator.NOT.getOperator() + checkedSymbol + Operator.OR.getOperator(), "");
                     }
-                }
-                if (d.claus.contains("~"+checkedSymbol)){
-                    if (isNegated){
-                        // Trim substring
-                        d.claus.replace("~"+checkedSymbol,"");
-                    }
-                    else {
-                        // Remove
+                    // If it is a contradiction, remove from belief base
+                    if(d.claus.isEmpty()){
+                        data.removeDataAtIndex(d.index);
                         remainClaus.remove(d);
+                    } else if(d.claus.length() <= 2){
+                        // Add new symbols to queue, for further reductions
+                        char control = d.claus.length() == 1 ?
+                                d.claus.charAt(0) :
+                                d.claus.charAt(1);
+                        if(!queue.stream().anyMatch(da -> da.contains(control + ""))){
+                            queue.add(d.claus);
+                            remainClaus.remove(d);
+                        }
                     }
                 }
-                // Check if it has become a contradiction
-
-                //Tror jeg har lavet noget der burde virKE
-                if (d.claus.length() == 0){
-                    removeContradiction(d);
+                if(remainClaus.isEmpty()){
+                    queue.clear();
+                    return;
                 }
-            });*/
+            }*/
 
             //prøv evt. det her kode
-            remainClaus.stream().filter(d -> d.claus.contains(checkedSymbol))
+            toRemove.clear();
+            remainClaus.stream()
+                    .filter(d -> d.claus.contains(checkedSymbol))
                     .forEach(d ->{
                         //contains the exact same
-                        if((isNegated && d.claus.contains(Symbol.NOT.getSYMBOL() + checkedSymbol)) || (!isNegated && !d.claus.contains(Symbol.NOT.getSYMBOL() + checkedSymbol)))
+                        if((isNegated && d.claus.contains(Operator.NOT.getOperator() + checkedSymbol)) || (!isNegated && !d.claus.contains(Operator.NOT.getOperator() + checkedSymbol)))
                             // Clause is proven
                             data.removeDataAtIndex(data.getIndex(d.claus));
                         else{
                             // Clauses are trimmed of symbol
-                            if(isNegated)
-                                d.claus.replaceAll(checkedSymbol + Symbol.OR.getSYMBOL(), "");
-                            else
-                                d.claus.replaceAll(Symbol.NOT.getSYMBOL() + checkedSymbol + Symbol.OR.getSYMBOL(), "");
+                            if(isNegated) {
+                                d.claus = d.claus.replace(checkedSymbol + Operator.OR.getOperator(), "");
+                                d.claus = d.claus.replace(Operator.OR.getOperator() + checkedSymbol,"");
+                                d.claus = d.claus.replace(checkedSymbol, "");
+                            }
+                            else {
+                                d.claus = d.claus.replace(Operator.NOT.getOperator() + checkedSymbol + Operator.OR.getOperator(), "");
+                                d.claus = d.claus.replace(Operator.OR.getOperator() + Operator.NOT.getOperator() + checkedSymbol, "");
+                                d.claus = d.claus.replace(Operator.NOT.getOperator() + checkedSymbol, "");
+                            }
                             // If it is a contradiction, remove from belief base
                             if(d.claus.isEmpty()){
                                 data.removeDataAtIndex(d.index);
-                                remainClaus.remove(d);
-                            } else{
+                                toRemove.add(d);
+                            } else if(d.claus.length() <= 2){
                                 // Add new symbols to queue, for further reductions
                                 char control = d.claus.length() == 1 ?
                                         d.claus.charAt(0) :
                                         d.claus.charAt(1);
-                                if(!queue.stream().anyMatch(da -> da.contains(control + ""))){
+                                if(queue.stream().noneMatch(da -> da.contains(control + ""))){
                                     queue.add(d.claus);
+                                    toRemove.add(d);
                                 }
                             }
                         }
                     });
+            toRemove.forEach(d -> remainClaus.remove(d));
 
             /*
             * Prøv at kig på det der!!!
@@ -152,11 +164,9 @@ public class EntailmentCheck {
             this.index = index;
             this.claus = claus;
         }
+
+        public String getClaus(){
+            return this.claus;
+        }
     }
-
-    private void removeContradiction(Data contradiction){
-
-    }
-
-    // Clone
 }
