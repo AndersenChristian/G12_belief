@@ -1,6 +1,7 @@
 package Model;
 
-public interface IKnowledgeBase {
+public interface IKnowledgeBase extends Comparable<IKnowledgeBase>{
+
     void addData(String[] list);
     void addData(String[] list, int value);
     void addData(String s);
@@ -11,5 +12,6 @@ public interface IKnowledgeBase {
     String getDataAtIndex(int index);
     int getValueAtIndex(int index);
     String[] getAllData();
+    int whenAdded();
 
 }

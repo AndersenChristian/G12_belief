@@ -3,8 +3,10 @@ package Controller;
 import Model.IKnowledgeBase;
 import Model.Operator;
 
+import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -20,6 +22,7 @@ public class EntailmentCheck {
         // Copy the knowledge base
         IntStream.range(0,data.getSize()) //TODO: check index
                 .forEach(i -> remainClaus.add(new Data(i,data.getDataAtIndex(i))));
+        Collections.reverse(remainClaus);
 
         // Add all short elements to a queue
         Queue<String> queue = new ArrayDeque<>();
