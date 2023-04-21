@@ -8,6 +8,7 @@ import Controller.CNF.And;
 import Controller.CNF.Imp;
 import Controller.CNF.Or;
 import Controller.CNF.Iff;
+import Model.Operator;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -21,15 +22,11 @@ import java.util.stream.Stream;
  */
 public class CNFController {
 
-    private final String iff = "<=>", imp = "=>", not = "~", or = "|", and = "&";
-
-    private final List<String> possible = Arrays.asList(iff, or, not, imp, and);
-
-    private BiFunction<CNF, CNF, CNF> generatorArrows(String choice) {
+    private BiFunction<CNF, CNF, CNF> generatorArrows(Operator operator) {
         try {
-            if (choice.equals(iff)) {
+            if (operator.equals(Operator.IFF)) {
                 return Iff::new;
-            } else if (choice.equals(imp)) {
+            } else if (operator.equals(Operator.IMP)) {
                 return Imp::new;
             } else {
                 throw new NoneTypeE();
@@ -41,11 +38,11 @@ public class CNFController {
         }
     }
 
-    private Function<ArrayList<CNF>, CNF> generatorAndOr(String choice) {
+    private Function<ArrayList<CNF>, CNF> generatorAndOr(Operator operator) {
         try {
-            if (choice.equals(and)) {
+            if (operator.equals(Operator.AND)) {
                 return And::new;
-            } else if (choice.equals(or)) {
+            } else if (operator.equals(Operator.OR)) {
                 return Or::new;
             } else {
                 throw new NoneTypeE();
@@ -78,7 +75,8 @@ public class CNFController {
      * @return list of variables eg. [p, q]
      */
     private List<String> getVariables(String input) {
-        return Arrays.stream(input.split(possible.toString()))
+        List<String> delimiters = Arrays.stream(Operator.values()).map(Operator::getOperator).toList();
+        return Arrays.stream(input.split(delimiters.toString()))
                 .map(String::trim)
                 .filter(str -> !str.isEmpty())
                 .toList();
@@ -89,13 +87,19 @@ public class CNFController {
      * @param input the logic expression ie. ~p => q
      * @return list of operators eg. [~, =>]
      */
-    private String getOperator(String input) {
-        String regex = possible.stream()
+    private Operator getOperator(String input) {
+        List<String> operators = Arrays.stream(Operator.values()).map(Operator::getOperator).toList();
+        String regex = operators.stream()
                 .map(s -> "\\" + s)
                 .collect(Collectors.joining("|", "[^", "]+"));
-        return Arrays.stream(input.split(regex))
+        String operator = Arrays.stream(input.split(regex))
                 .map(String::trim)
                 .filter(str -> !str.isEmpty())
+                .findFirst()
+                .get();
+
+        return Arrays.stream(Operator.values())
+                .filter(op -> op.getOperator().equals(operator))
                 .findFirst()
                 .get();
     }
@@ -127,40 +131,39 @@ public class CNFController {
      * @param terms list of terms
      * @return converted list of CNF-objects
      */
-    private List<CNF> toClass(List<String> terms) {
+    private List<CNF> toObjects(List<String> terms) {
         if (terms.size() > 0) {
             String goal = terms.remove(0);
-            List<CNF> converted = toClass(terms);
+            List<CNF> converted = toObjects(terms);
             var map = storeTermsInHash(converted);
+
             if (goal.length() == 1) {
                 converted.add(0, new Atomic(goal.charAt(0)));
+            } else if (goal.equals("TRUE")) {
+                converted.add(0, new Atomic(true, ""));
+            } else if (goal.equals("FALSE")) {
+                converted.add(0, new Atomic(false, ""));
             } else {
-                if (goal.equals("TRUE")) {
-                    converted.add(0, new Atomic(true, ""));
-                } else if (goal.equals("FALSE")) {
-                    converted.add(0, new Atomic(false, ""));
-                } else {
-                    String operator = getOperator(goal);
-                    List<String> variables = getVariables(goal);
-                    switch (operator) {
-                        case iff, imp -> {
-                            var constructor = generatorArrows(operator);
-                            String left = variables.get(0);
-                            String right = variables.get(1);
-                            converted.add(0, constructor.apply(map.get(left), map.get(right)));
-                        }
-                        case not -> converted.add(0, new Not(map.get(variables.get(0))));
-                        case and, or -> {
-                            var constructor = generatorAndOr(operator);
-                            ArrayList<CNF> cnfed = new ArrayList<>();
-                            for (String s : variables) {
-                                cnfed.add(map.get(s));
-                            }
-                            converted.add(0, constructor.apply(cnfed));
-                        }
-                        default -> System.out.println("hate");
+                Operator operator = getOperator(goal);
+                List<String> variables = getVariables(goal);
+                switch (operator) {
+                    case IFF, IMP -> {
+                        var constructor = generatorArrows(operator);
+                        String left = variables.get(0);
+                        String right = variables.get(1);
+                        converted.add(0, constructor.apply(map.get(left), map.get(right)));
                     }
-                }
+                    case NOT -> converted.add(0, new Not(map.get(variables.get(0))));
+                    case AND, OR -> {
+                        var constructor = generatorAndOr(operator);
+                        ArrayList<CNF> cnfed = new ArrayList<>();
+                        for (String s : variables) {
+                            cnfed.add(map.get(s));
+                        }
+                        converted.add(0, constructor.apply(cnfed));
+                    }
+                    default -> System.out.println("Unknown input. This message should not happen, but handled by regex");
+            }
             }
             return converted;
         } else {
@@ -176,7 +179,7 @@ public class CNFController {
     public List<CNF> convertToCNF(List<String> input) {
         Stream<String> s = input.stream();
         return s.map(this::toListOfSortedTerms)
-                .map(this::toClass)
+                .map(this::toObjects)
                 .map((ls) -> ls.get(0))
                 .map(CNF::convert)
                 .map(CNF::simplify)
