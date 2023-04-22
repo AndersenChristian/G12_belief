@@ -8,13 +8,6 @@ import java.util.stream.IntStream;
 public class KnowledgeBase implements IKnowledgeBase {
     List<Data> expressions = new ArrayList<>();
     private int size = 0;
-    static int position = 0;
-    private final int myPosition;
-
-    public KnowledgeBase(){
-        myPosition = position;
-        position++;
-    }
 
     @Override
     public void addData(String[] list) {
@@ -73,18 +66,8 @@ public class KnowledgeBase implements IKnowledgeBase {
     }
 
     @Override
-    public int whenAdded() {
-        return this.myPosition;
-    }
-
-    @Override
     public String toString() {
         return expressions.toString();
-    }
-
-    @Override
-    public int compareTo(IKnowledgeBase o) {
-        return this.whenAdded() - o.whenAdded();
     }
 
 

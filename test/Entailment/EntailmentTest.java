@@ -1,4 +1,6 @@
-import Controller.EntailmentCheck;
+package Entailment;
+
+import Controller.EntailmentControl.TrustShortestNewestFirst;
 import Controller.Strategy;
 import Model.IKnowledgeBase;
 import Model.KnowledgeBase;
@@ -6,7 +8,7 @@ import Model.Operator;
 import org.junit.Test;
 
 public class EntailmentTest {
-    EntailmentCheck ec = new EntailmentCheck(Strategy.TRUSTS_NEW);
+    TrustShortestNewestFirst ec = new TrustShortestNewestFirst(Strategy.TRUSTS_NEW);
     String and = Operator.AND.getOperator(), or = Operator.OR.getOperator(), not = Operator.NOT.getOperator();
 
     @Test
