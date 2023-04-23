@@ -2,7 +2,7 @@ package Controller;
 
 import Controller.CNF.CNF;
 import InputValidation.IValidation;
-import InputValidation.Regex;
+import InputValidation.Validator;
 import Model.KnowledgeBase;
 import Model.IKnowledgeBase;
 import View.IView;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class ProgramController {
-    private final IValidation validator = new Regex(); //temp way to do it until actual validation class is made
+    private final IValidation validator = new Validator(); //temp way to do it until actual validation class is made
     private final IKnowledgeBase data = new KnowledgeBase();
     private final IView view = new TUI();
     private final CNFController CNFController = new CNFController();
@@ -43,13 +43,14 @@ public class ProgramController {
                     this.view.displayKnowledgeBase(data);
                 }
                 case "test" -> {
-                    System.out.println(((Regex) validator).testString());
+                    //System.out.println(((Regex) validator).testString());
                 }
                 default -> {
                     if(Pattern.matches("rm[A-Z][a-z]*", input)){
 
                     }
                     else if(validator.validateString(input)){
+
                         List<CNF> cnf = CNFController.convertToCNF(List.of(input.split("\n")));
                         cnf.forEach(expr -> data.addData(expr.toInputFormat()));
                         System.out.println("Successfully added");
