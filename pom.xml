@@ -24,6 +24,11 @@
         <testSourceDirectory>test</testSourceDirectory>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.11.1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
