@@ -6,7 +6,19 @@ import java.util.stream.IntStream;
 
 public class KnowledgeBase implements IKnowledgeBase {
     List<Data> expressions = new ArrayList<>();
-    private int size = 0;
+
+    public KnowledgeBase(){}
+
+
+    /**
+     * Used to copy the object
+     *
+     * @param data
+     */
+    public KnowledgeBase(IKnowledgeBase data){
+        Arrays.stream(data.getAllData())
+                .forEach(d -> expressions.add(new Data(d)));
+    }
 
     @Override
     public void addData(String[] list) {
@@ -27,13 +39,11 @@ public class KnowledgeBase implements IKnowledgeBase {
     @Override
     public void addData(String s, int value){
         s = this.sortClaus(s);
-        size++;
         this.expressions.add(new Data(s, value));
     }
 
     @Override
     public void removeDataAtIndex(int index) {
-        size--;
         expressions.remove(index);
     }
 
@@ -52,7 +62,7 @@ public class KnowledgeBase implements IKnowledgeBase {
 
     @Override
     public int getSize() {
-        return this.size;
+        return expressions.size();
     }
 
     @Override
@@ -78,8 +88,6 @@ public class KnowledgeBase implements IKnowledgeBase {
     private String sortClaus(String in){
         String[] variables = in.split("[" + Operator.OR.getOperator() + "]");
         List<TempData> tempData = new ArrayList<>();
-        //IntStream.range(0,variables.length-1)
-        //        .forEach(i -> tempData.add(new TempData(variables[i].charAt(variables.length-1),variables.length == 2)));
         Arrays.stream(variables).forEach(s -> tempData.add(new TempData(s.charAt(s.length()-1),s.length() == 2)));
 
         tempData.sort(Comparator.comparing(TempData::getC));

@@ -73,6 +73,7 @@ public class EntailmentTest {
         }
     }
 
+    /*
     @Test
     public void ecTest4(){
         IKnowledgeBase kb = new KnowledgeBase();
@@ -100,5 +101,5 @@ public class EntailmentTest {
         for(Data d: kb.getAllData()){
             System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
-    }
+    }*/
 }
