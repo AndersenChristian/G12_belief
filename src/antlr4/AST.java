@@ -1,8 +1,5 @@
 package antlr4;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class AST {}
 
 class Start extends AST {
@@ -13,7 +10,7 @@ class Start extends AST {
     }
 
     public Expr convertToCNF() {
-        return expr.CNFConverter();
+        return expr.convertToCNF();
     }
 }
 
@@ -25,8 +22,8 @@ class ExprInstance extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
-        return expr.CNFConverter();
+    public Expr convertToCNF() {
+        return expr.convertToCNF();
     }
 
     @Override
@@ -43,8 +40,8 @@ class Not extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
-        return new Not(this.c1.CNFConverter());
+    public Expr convertToCNF() {
+        return new Not(this.c1.convertToCNF());
     }
 
     @Override
@@ -62,7 +59,7 @@ class And extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
+    public Expr convertToCNF() {
         return new And(c1, c2);
     }
 
@@ -81,9 +78,9 @@ class Or extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
-        Expr c1 = this.c1.CNFConverter();
-        Expr c2 = this.c2.CNFConverter();
+    public Expr convertToCNF() {
+        Expr c1 = this.c1.convertToCNF();
+        Expr c2 = this.c2.convertToCNF();
         return new Or(c1, c2);
     }
 
@@ -102,9 +99,9 @@ class Iff extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
-        Expr c1 = this.c1.CNFConverter();
-        Expr c2 = this.c2.CNFConverter();
+    public Expr convertToCNF() {
+        Expr c1 = this.c1.convertToCNF();
+        Expr c2 = this.c2.convertToCNF();
         return new Or(new And(new Not(c2), c1), new And(new Not(c1), c2));
     }
 
@@ -123,9 +120,9 @@ class Imp extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
-        Expr c1 = this.c1.CNFConverter();
-        Expr c2 = this.c2.CNFConverter();
+    public Expr convertToCNF() {
+        Expr c1 = this.c1.convertToCNF();
+        Expr c2 = this.c2.convertToCNF();
         return new Or(new Not(c1), new ExprInstance(c2));
     }
 
@@ -143,8 +140,8 @@ class Parenthesis extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
-        return expr.CNFConverter();
+    public Expr convertToCNF() {
+        return expr.convertToCNF();
     }
 
     @Override
@@ -164,7 +161,7 @@ class Atomic extends Expr {
     }
 
     @Override
-    public Expr CNFConverter() {
+    public Expr convertToCNF() {
         return this;
     }
 
