@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CNFConverter {
 
-    public List<Expr> convertToCNF(String input) {
+    public Expr convertToCNF(String input) {
         // open the input file
         //CharStream input = CharStreams.fromFileName(filename);
 
@@ -23,8 +23,6 @@ public class CNFConverter {
 
         // get the stream of tokens from the scanner
         CommonTokenStream tokens = new CommonTokenStream(lex);
-
-        //tokens.fill();
 
         // create a parser
         LogicParser parser = new LogicParser(tokens);
@@ -39,8 +37,7 @@ public class CNFConverter {
         // Construct an interpreter and run it on the parse tree
         Interpreter interpreter = new Interpreter();
         Start result = (Start) interpreter.visit(parseTree);
-        Environment env = new Environment();
-        return result.convertToCNF(env);
+        return result.convertToCNF();
     }
 }
 
@@ -48,11 +45,7 @@ class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicVisitor<
 
     @Override
     public AST visitStart(LogicParser.StartContext ctx) {
-        List<Expr> expr = new ArrayList<>();
-        for (LogicParser.ExprContext e : ctx.e) {
-            expr.add((Expr) visit(e));
-        }
-        return new Start(expr);
+        return new Start((Expr) visit(ctx.e));
     }
 
     @Override

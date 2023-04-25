@@ -4,7 +4,7 @@ grammar Logic;
     package antlr4;
 }
 
-start: e+=expr+ EOF;
+start: e=expr EOF;
 
 expr : '(' c1=expr ')'              # Parentheses
      | '~' c1=expr                  # NOT

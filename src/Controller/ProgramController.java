@@ -45,8 +45,11 @@ public class ProgramController {
                     this.view.displayKnowledgeBase(data);
                 }
                 default -> {
-                    List<Expr> cnf = new CNFConverter().convertToCNF(input);
-                    cnf.forEach(expr -> data.addData(expr.toInputFormat()));
+                    List<String> terms = List.of(input.split("&"));
+                    terms.stream()
+                            .map(t -> new CNFConverter().convertToCNF(t))
+                            .forEach(e -> data.addData(e.toInputFormat()));
+
                     System.out.println("Successfully added");
                 }
             }

@@ -6,26 +6,14 @@ import java.util.List;
 public abstract class AST {}
 
 class Start extends AST {
-    List<Expr> expr;
+    Expr expr;
 
-    public Start(List<Expr> expr) {
+    public Start(Expr expr) {
         this.expr = expr;
     }
 
-    public List<Expr> convertToCNF(Environment env) {
-        List<Expr> cnf = new ArrayList<>();
-        for (Expr e : expr) {
-            cnf.add(e.CNFConverter(env));
-        }
-        return cnf;
-    }
-
-    public String toInputFormat() {
-        StringBuilder result = new StringBuilder();
-        for (Expr e : expr) {
-            result.append(e.toInputFormat());
-        }
-        return result.toString();
+    public Expr convertToCNF() {
+        return expr.CNFConverter();
     }
 }
 
@@ -37,8 +25,8 @@ class ExprInstance extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
-        return expr.CNFConverter(env);
+    public Expr CNFConverter() {
+        return expr.CNFConverter();
     }
 
     @Override
@@ -55,8 +43,8 @@ class Not extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
-        return new Not(this.c1.CNFConverter(env));
+    public Expr CNFConverter() {
+        return new Not(this.c1.CNFConverter());
     }
 
     @Override
@@ -74,9 +62,7 @@ class And extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
-        Expr c1 = this.c1.CNFConverter(env);
-        Expr c2 = this.c2.CNFConverter(env);
+    public Expr CNFConverter() {
         return new And(c1, c2);
     }
 
@@ -95,9 +81,9 @@ class Or extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
-        Expr c1 = this.c1.CNFConverter(env);
-        Expr c2 = this.c2.CNFConverter(env);
+    public Expr CNFConverter() {
+        Expr c1 = this.c1.CNFConverter();
+        Expr c2 = this.c2.CNFConverter();
         return new Or(c1, c2);
     }
 
@@ -116,9 +102,9 @@ class Iff extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
-        Expr c1 = this.c1.CNFConverter(env);
-        Expr c2 = this.c2.CNFConverter(env);
+    public Expr CNFConverter() {
+        Expr c1 = this.c1.CNFConverter();
+        Expr c2 = this.c2.CNFConverter();
         return new Or(new And(new Not(c2), c1), new And(new Not(c1), c2));
     }
 
@@ -137,9 +123,9 @@ class Imp extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
-        Expr c1 = this.c1.CNFConverter(env);
-        Expr c2 = this.c2.CNFConverter(env);
+    public Expr CNFConverter() {
+        Expr c1 = this.c1.CNFConverter();
+        Expr c2 = this.c2.CNFConverter();
         return new Or(new Not(c1), new ExprInstance(c2));
     }
 
@@ -157,8 +143,8 @@ class Parenthesis extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
-        return expr.CNFConverter(env);
+    public Expr CNFConverter() {
+        return expr.CNFConverter();
     }
 
     @Override
@@ -178,7 +164,7 @@ class Atomic extends Expr {
     }
 
     @Override
-    public Expr CNFConverter(Environment env) {
+    public Expr CNFConverter() {
         return this;
     }
 
