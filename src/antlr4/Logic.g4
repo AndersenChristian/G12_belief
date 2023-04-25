@@ -6,7 +6,7 @@ grammar Logic;
 
 start: e+=expr+ EOF;
 
-expr : '(' c1+=expr+ ')'              # Parentheses
+expr : '(' c1=expr ')'              # Parentheses
      | '~' c1=expr                  # NOT
      | c1=expr ('<=>') c2=expr      # IFF
      | c1=expr ('=>') c2=expr       # IMP

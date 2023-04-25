@@ -3,35 +3,23 @@ package antlr4;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
-class LogicExprListener extends LogicBaseListener {
-    public static void main(String[] args) throws IOException {
+public class CNFConverter {
 
-        // we expect exactly one argument: the name of the input file
-        if (args.length != 1) {
-            System.err.println("\n");
-            System.err.println("Logic Interpreter\n");
-            System.err.println("=================\n\n");
-            System.err.println("Please give as input argument a filename\n");
-            System.exit(1);
-        }
-        String filename = args[0];
-
+    public List<Expr> convertToCNF(String input) {
         // open the input file
-        CharStream input = CharStreams.fromFileName(filename);
+        //CharStream input = CharStreams.fromFileName(filename);
+
+        CharStream inputstream = CharStreams.fromString(input);
 
         // create a lexer/scanner
-        LogicLexer lex = new LogicLexer(input);
+        LogicLexer lex = new LogicLexer(inputstream);
 
         // get the stream of tokens from the scanner
         CommonTokenStream tokens = new CommonTokenStream(lex);
@@ -52,38 +40,8 @@ class LogicExprListener extends LogicBaseListener {
         Interpreter interpreter = new Interpreter();
         Start result = (Start) interpreter.visit(parseTree);
         Environment env = new Environment();
-        result.eval(env);
-        /*result.runSimulator(env);
-        System.out.println(env);*/
-        //ParseTreeWalker walker = new ParseTreeWalker();
-        //LogicExprListener listener = new LogicExprListener();
-        //walker.walk(listener, parser.start());
+        return result.convertToCNF(env);
     }
-
-    /*@Override
-    public void enterStart(LogicParser.StartContext ctx) {
-        System.out.println("Entering start: " + ctx.getText());
-    }
-
-    @Override
-    public void enterAND(LogicParser.ANDContext ctx) {
-        System.out.println("Entering and: " + ctx.getText());
-        new And((Expr) ctx.c1, (Expr) ctx.c2);
-    }
-
-    @Override public void exitAND(LogicParser.ANDContext ctx) {
-        System.out.println("exit and: " + ctx.getText());
-    }
-
-    @Override
-    public void enterAtomic(LogicParser.AtomicContext ctx) {
-        System.out.println("enter atom: " + ctx.getText());
-    }
-
-    @Override
-    public void exitAtomic(LogicParser.AtomicContext ctx) {
-        System.out.println("exit atom: " + ctx.getText());
-    }*/
 }
 
 class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicVisitor<AST> {
@@ -99,19 +57,16 @@ class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicVisitor<
 
     @Override
     public AST visitNOT(LogicParser.NOTContext ctx) {
-        System.out.println(ctx.c1.getText());
         return new Not((Expr) visit(ctx.c1));
     }
 
     @Override
     public AST visitOR(LogicParser.ORContext ctx) {
-        System.out.println(ctx.getText());
         return new Or((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
     }
 
     @Override
     public AST visitAND(LogicParser.ANDContext ctx) {
-        System.out.println(ctx.getText());
         return new And((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
     }
 
@@ -122,7 +77,6 @@ class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicVisitor<
 
     @Override
     public AST visitAtomic(LogicParser.AtomicContext ctx) {
-        System.out.println(ctx.getText());
         return new Atomic(ctx.getText(), false);
     }
 
@@ -133,11 +87,6 @@ class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicVisitor<
 
     @Override
     public AST visitParentheses(LogicParser.ParenthesesContext ctx) {
-        System.out.println(ctx.getText());
-        List<Expr> expr = new ArrayList<>();
-        for (LogicParser.ExprContext e : ctx.c1) {
-            expr.add((Expr) visit(e));
-        }
-        return new Parenthesis(expr);
+        return new Parenthesis((Expr) visit(ctx.c1));
     }
 }
