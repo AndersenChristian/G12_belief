@@ -2,6 +2,7 @@ package Entailment;
 
 import Controller.EntailmentControl.TrustShortestNewestFirst;
 import Controller.Strategy;
+import Model.Data;
 import Model.IKnowledgeBase;
 import Model.KnowledgeBase;
 import Model.Operator;
@@ -16,26 +17,27 @@ public class EntailmentTest {
         IKnowledgeBase kb = new KnowledgeBase();
         kb.addData(new String[]{"A" + Operator.OR.getOperator() + "B",Operator.NOT.getOperator() + "A"});
         System.out.println("Before:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
+        System.out.println("\n after sorting:");
         ec.removeEntailments(kb);
-        System.out.println("\nAfter;:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        System.out.println("\n \nAfter;:");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
         System.out.println("\n");
 
         kb = new KnowledgeBase();
         kb.addData(new String[]{"A" + Operator.OR.getOperator() + "B",Operator.NOT.getOperator() + "B",Operator.NOT.getOperator() + "A"});
         System.out.println("before:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
         ec.removeEntailments(kb);
         System.out.println("\nafter:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
     }
 
@@ -44,13 +46,13 @@ public class EntailmentTest {
         IKnowledgeBase kb = new KnowledgeBase();
         kb.addData(new String[]{Operator.NOT.getOperator() + "A",Operator.NOT.getOperator() + "B","A" + Operator.OR.getOperator() + "B"});
         System.out.println("before:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
         ec.removeEntailments(kb);
         System.out.println("\nafter:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
     }
 
@@ -59,13 +61,13 @@ public class EntailmentTest {
         IKnowledgeBase kb = new KnowledgeBase();
         kb.addData(new String[]{not + "A","A" + or + "B" + or + "C", not + "B" + or + "C", not + "C"});
         System.out.println("before:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
         ec.removeEntailments(kb);
         System.out.println("\nafter:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
     }
 
@@ -78,13 +80,13 @@ public class EntailmentTest {
                 not + "A",
                 not + "B"});
         System.out.println("before:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
         ec.removeEntailments(kb);
         System.out.println("\nafter:");
-        for(String s: kb.getAllData()){
-            System.out.print(s.replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
     }
 }

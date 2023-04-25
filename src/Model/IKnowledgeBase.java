@@ -7,10 +7,11 @@ public interface IKnowledgeBase{
     void addData(String s);
     void addData(String s, int value);
     void removeDataAtIndex(int index);
+    void removeData(Data data);
     int getIndex(String s);
     int getSize();
-    String getDataAtIndex(int index);
+    Data getDataAtIndex(int index);
     int getValueAtIndex(int index);
-    String[] getAllData();
+    Data[] getAllData();
 
 }

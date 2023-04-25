@@ -6,14 +6,13 @@ import Model.IKnowledgeBase;
 import Model.Operator;
 
 import java.util.*;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class TrustShortestNewestFirst implements IEntailmentCheck {
+public class TrustShortestNewestFirst2 implements IEntailmentCheck {
     Strategy strategy;
     List<Data> remainClaus = new ArrayList<>();
 
-    public TrustShortestNewestFirst(Strategy strategy) {
+    public TrustShortestNewestFirst2(Strategy strategy) {
         this.strategy = strategy;
     }
 

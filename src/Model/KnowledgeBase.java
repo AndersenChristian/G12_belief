@@ -38,6 +38,11 @@ public class KnowledgeBase implements IKnowledgeBase {
     }
 
     @Override
+    public void removeData(Data data) {
+        expressions.remove(data);
+    }
+
+    @Override
     public int getIndex(String s) {
         return IntStream.range(0, expressions.size())
                 .filter(i -> s.equals(expressions.get(i)))
@@ -51,8 +56,8 @@ public class KnowledgeBase implements IKnowledgeBase {
     }
 
     @Override
-    public String getDataAtIndex(int index) {
-        return expressions.get(index).claus;
+    public Data getDataAtIndex(int index) {
+        return expressions.get(index);
     }
 
     @Override
@@ -61,8 +66,8 @@ public class KnowledgeBase implements IKnowledgeBase {
     }
 
     @Override
-    public String[] getAllData() {
-        return expressions.stream().map(Data::getClaus).toArray(String[]::new);
+    public Data[] getAllData() {
+        return expressions.toArray(Data[]::new);
     }
 
     @Override
@@ -70,17 +75,5 @@ public class KnowledgeBase implements IKnowledgeBase {
         return expressions.toString();
     }
 
-
-    class Data{
-        public String claus;
-        public int value;
-        public Data(String claus, int value){
-            this.claus = claus;
-            this.value = value;
-        }
-        public String getClaus(){
-            return this.claus;
-        }
-    }
 
 }
