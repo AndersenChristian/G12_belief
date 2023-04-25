@@ -5,6 +5,7 @@ import Model.Data;
 import Model.IKnowledgeBase;
 import Model.Operator;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -52,7 +53,6 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
             }
         }
         toRemove.forEach(d -> remainClaus.remove(d));
-
 
         // While que is not empty, Pop
         while (queue.size() > 0) {
@@ -104,47 +104,23 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
             toRemove.forEach(d -> remainClaus.remove(d));
         }
 
-        // Bruteforce for large clause contradictions
+        // Find all variables
+        String omegaString = "";
+        ArrayList<String> clauseVariables = new ArrayList<String>();
         for (int i=0; i<remainClaus.size(); i++){
-
-            // Check first clause
-            String checkClause = remainClaus.get(i).getClaus();
-
-            // Variables to check for
-            String charCheckArray[] = checkClause.split("|");
-
-            // Clauses to check for contradictions
-            ArrayList<Data> clauseCheckList = new ArrayList<Data>();
-
-            // Strip of negation
-            for (int j=0; j< charCheckArray.length; j++){
-                charCheckArray[j].replace(Operator.NOT.getOperator(),"");
-            }
-
-            // Check for each clause in knowledge base
-            for (int j=0; j<remainClaus.size(); j++){
-
-                // Check for all variables
-                int variablesMatching=0;
-                for (int q=0; q<charCheckArray.length; q++){
-                    // If they contain
-                    if (remainClaus.get(j).getClaus().contains(charCheckArray[q])){
-                        variablesMatching++;
-                    }
-                }
-
-                // Add if match
-                if (variablesMatching == charCheckArray.length){
-                    clauseCheckList.add(remainClaus.get(i));
-                }
-            }
-
-            // Generate all combinations
-
-
-            // If Clause check list contains all combinations
-
+            // Add string to
+            omegaString += remainClaus.get(i).getClaus();
         }
+        omegaString.replace(Operator.OR.getOperator(), "");
+        omegaString.replace(Operator.NOT.getOperator(), "");
+
+        while(omegaString.length()>0){
+            //clauseVariables.add(String.valueOf(omegaString.charAt(0)));
+            omegaString = omegaString.replace(String.valueOf(omegaString.charAt(0)),"");
+            System.out.println(omegaString);
+        }
+
+        System.out.println(clauseVariables);
 
         if (remainClaus.isEmpty()) return;
     }

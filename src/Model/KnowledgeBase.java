@@ -75,16 +75,19 @@ public class KnowledgeBase implements IKnowledgeBase {
         return expressions.toString();
     }
 
-    private String sortClaus(String s){
-        String[] variables = s.split(Operator.OR.getOperator());
+    private String sortClaus(String in){
+        String[] variables = in.split("[" + Operator.OR.getOperator() + "]");
         List<TempData> tempData = new ArrayList<>();
-        IntStream.range(0,variables.length-1)
-                .forEach(i -> tempData.add(new TempData(variables[i].charAt(variables.length-1),variables.length == 2)));
+        //IntStream.range(0,variables.length-1)
+        //        .forEach(i -> tempData.add(new TempData(variables[i].charAt(variables.length-1),variables.length == 2)));
+        Arrays.stream(variables).forEach(s -> tempData.add(new TempData(s.charAt(s.length()-1),s.length() == 2)));
 
         tempData.sort(Comparator.comparing(TempData::getC));
-        return tempData.stream()
-                .map(Object::toString)
+        String out = tempData.stream()
+                .map(o -> o.toString() + Operator.OR.getOperator())
                 .collect(Collectors.joining());
+        return out.substring(0, out.length()-1);
+
     }
 
     private class TempData{

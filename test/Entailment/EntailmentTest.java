@@ -8,6 +8,8 @@ import Model.KnowledgeBase;
 import Model.Operator;
 import org.junit.Test;
 
+import java.util.Timer;
+
 public class EntailmentTest {
     TrustShortestNewestFirst ec = new TrustShortestNewestFirst(Strategy.TRUSTS_NEW);
     String and = Operator.AND.getOperator(), or = Operator.OR.getOperator(), not = Operator.NOT.getOperator();
@@ -83,7 +85,17 @@ public class EntailmentTest {
         for(Data d: kb.getAllData()){
             System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
-        ec.removeEntailments(kb);
+
+        Timer timer = new Timer();
+        InterruptTimerTask interruptTimerTask = new InterruptTimerTask(Thread.currentThread());
+        try {
+            ec.removeEntailments(kb);
+        }
+        catch (InterruptedException e){
+            System.out.println(e.getMessage());
+        }finally {
+            timer.cancel();
+        }
         System.out.println("\nafter:");
         for(Data d: kb.getAllData()){
             System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
