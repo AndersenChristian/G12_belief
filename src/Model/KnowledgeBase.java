@@ -1,8 +1,7 @@
 package Model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class KnowledgeBase implements IKnowledgeBase {
@@ -16,8 +15,8 @@ public class KnowledgeBase implements IKnowledgeBase {
 
     @Override
     public void addData(String[] list, int value) {
-        size += list.length;
-        Arrays.stream(list).forEach(s -> expressions.add(new Data(s, value)));
+        Arrays.stream(list)
+                .forEach(s -> this.addData(s,value));
     }
 
     @Override
@@ -27,6 +26,7 @@ public class KnowledgeBase implements IKnowledgeBase {
 
     @Override
     public void addData(String s, int value){
+        s = this.sortClaus(s);
         size++;
         this.expressions.add(new Data(s, value));
     }
@@ -75,5 +75,34 @@ public class KnowledgeBase implements IKnowledgeBase {
         return expressions.toString();
     }
 
+    private String sortClaus(String s){
+        String[] variables = s.split(Operator.OR.getOperator());
+        List<TempData> tempData = new ArrayList<>();
+        IntStream.range(0,variables.length-1)
+                .forEach(i -> tempData.add(new TempData(variables[i].charAt(variables.length-1),variables.length == 2)));
+
+        tempData.sort(Comparator.comparing(TempData::getC));
+        return tempData.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining());
+    }
+
+    private class TempData{
+        char c;
+        boolean isNegated;
+        public TempData(char c, boolean isNegated){
+            this.c = c;
+            this.isNegated = isNegated;
+        }
+
+        public char getC(){
+            return this.c;
+        }
+
+        @Override
+        public String toString(){
+            return isNegated ? Operator.NOT.getOperator() + c: String.valueOf(c);
+        }
+    }
 
 }

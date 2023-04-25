@@ -65,7 +65,7 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
             // If negated, check for symbol instead of negated symbol
             String checkedSymbol = isNegated ? queuepop.substring(1) : queuepop;
 
-            //prøv evt. det her kode
+            //Begin removing
             toRemove.clear();
             remainClaus.stream()
                     .filter(d -> d.getClaus().contains(checkedSymbol))
@@ -104,38 +104,48 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
             toRemove.forEach(d -> remainClaus.remove(d));
         }
 
-        if (remainClaus.isEmpty()) return;
+        // Bruteforce for large clause contradictions
+        for (int i=0; i<remainClaus.size(); i++){
 
-        /*
-        //Only things left, are those not as easy to remove.
-        toRemove.clear();
-        for( int i = remainClaus.size()-1; i >= 0; i--){
-            String normal = remainClaus.get(i).getClaus();
-            StringBuilder sb = new StringBuilder();
-            int last = 0;
-            for(int k = 0; k < normal.length(); k++){
-                if(normal.charAt(k) == Operator.OR.getOperator().charAt(0)){
-                    if(k-last == 1)
-                        sb.append(Operator.NOT.getOperator()).append(normal.charAt(i));
-                    else
-                        sb.append(normal.charAt(k));
-                    last = k;
-                }
+            // Check first clause
+            String checkClause = remainClaus.get(i).getClaus();
+
+            // Variables to check for
+            String charCheckArray[] = checkClause.split("|");
+
+            // Clauses to check for contradictions
+            ArrayList<Data> clauseCheckList = new ArrayList<Data>();
+
+            // Strip of negation
+            for (int j=0; j< charCheckArray.length; j++){
+                charCheckArray[j].replace(Operator.NOT.getOperator(),"");
             }
-            String reversed = sb.toString();
 
-            for(int j = i; j >= 0; j--){
-                String currentClaus = remainClaus.get(j).getClaus();
-                if(currentClaus.equals(normal))
-                    toRemove.add(remainClaus.get(j));
-                else if (currentClaus.contains(reversed)) {
-                    currentClaus = currentClaus.replace(reversed, "");
-                    if (currentClaus.length() == 0) {
-                        data.removeDataAtIndex(remainClaus.get(j).getIndex());
-                        toRemove.add(remainClaus.get(j));
+            // Check for each clause in knowledge base
+            for (int j=0; j<remainClaus.size(); j++){
+
+                // Check for all variables
+                int variablesMatching=0;
+                for (int q=0; q<charCheckArray.length; q++){
+                    // If they contain
+                    if (remainClaus.get(j).getClaus().contains(charCheckArray[q])){
+                        variablesMatching++;
                     }
                 }
+
+                // Add if match
+                if (variablesMatching == charCheckArray.length){
+                    clauseCheckList.add(remainClaus.get(i));
+                }
             }
-        }*/
+
+            // Generate all combinations
+
+
+            // If Clause check list contains all combinations
+
+        }
+
+        if (remainClaus.isEmpty()) return;
     }
 }
