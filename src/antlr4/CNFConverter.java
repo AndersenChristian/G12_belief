@@ -6,16 +6,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class CNFConverter {
 
     public Expr convertToCNF(String input) {
-        // open the input file
-        //CharStream input = CharStreams.fromFileName(filename);
-
         CharStream inputstream = CharStreams.fromString(input);
 
         // create a lexer/scanner
@@ -30,7 +23,7 @@ public class CNFConverter {
         // and parse anything from the grammar for "start"
         ParseTree parseTree = parser.start();
         if (parser.getNumberOfSyntaxErrors() > 0) {
-            System.err.println("Error: Syntax does not match with hwsim grammar");
+            System.err.println("Error: Syntax does not match with logic grammar");
             System.exit(1);
         }
 
@@ -41,45 +34,3 @@ public class CNFConverter {
     }
 }
 
-class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicVisitor<AST> {
-
-    @Override
-    public AST visitStart(LogicParser.StartContext ctx) {
-        return new Start((Expr) visit(ctx.e));
-    }
-
-    @Override
-    public AST visitNOT(LogicParser.NOTContext ctx) {
-        return new Not((Expr) visit(ctx.c1));
-    }
-
-    @Override
-    public AST visitOR(LogicParser.ORContext ctx) {
-        return new Or((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
-    }
-
-    @Override
-    public AST visitAND(LogicParser.ANDContext ctx) {
-        return new And((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
-    }
-
-    @Override
-    public AST visitIFF(LogicParser.IFFContext ctx) {
-        return new Iff((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
-    }
-
-    @Override
-    public AST visitAtomic(LogicParser.AtomicContext ctx) {
-        return new Atomic(ctx.getText(), false);
-    }
-
-    @Override
-    public AST visitIMP(LogicParser.IMPContext ctx) {
-        return new Imp((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
-    }
-
-    @Override
-    public AST visitParentheses(LogicParser.ParenthesesContext ctx) {
-        return new Parenthesis((Expr) visit(ctx.c1));
-    }
-}
