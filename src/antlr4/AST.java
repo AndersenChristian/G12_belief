@@ -2,6 +2,7 @@ package antlr4;
 
 import jdk.jfr.BooleanFlag;
 
+import java.util.concurrent.atomic.AtomicMarkableReference;
 import java.util.logging.Logger;
 
 public interface AST {}
@@ -48,6 +49,12 @@ class Not extends Expr {
 
     @Override
     public Expr lawOfDistribution(Environment env, Expr left) {
+        if (c1 instanceof Atomic) {
+            if (left instanceof Atomic)
+                return new Or(this,left);
+            return left.lawOfDistribution(env, this);
+        }
+        System.out.println("shouldn't happpend");
         return c1.lawOfDistribution(env, left);
     }
 
@@ -80,7 +87,7 @@ class And extends Expr {
 
     @Override
     public Expr lawOfDistribution(Environment env, Expr left){
-        return new And(c1.lawOfDistribution(env,left),c2.lawOfDistribution(env,left));
+        return new And(new Parenthesis(c1.lawOfDistribution(env,left)),new Parenthesis(c2.lawOfDistribution(env,left)));
     }
 
     @Override
@@ -156,9 +163,7 @@ class Imp extends Expr {
 
     @Override
     public Expr convertToCNF(Environment env) {
-        Expr c1 = this.c1.convertToCNF(env);
-        Expr c2 = this.c2.convertToCNF(env);
-        return new Parenthesis(new Or(new Not(c1), c2)).convertToCNF(env);
+        return new Parenthesis(new Or(new Not(this.c1), this.c2)).convertToCNF(env);
     }
 
     @Override
@@ -177,6 +182,7 @@ class Parenthesis extends Expr {
     @Override
     public Expr convertToCNF(Environment env) {
         Expr cnf = expr.convertToCNF(env);
+        //if (cnf instanceof Or) return cnf.lawOfDistribution(env, ((Or) cnf).c2);
         if (cnf instanceof Parenthesis) return cnf;
         return new Parenthesis(cnf);
     }

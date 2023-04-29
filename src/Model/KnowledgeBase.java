@@ -39,7 +39,9 @@ public class KnowledgeBase implements IKnowledgeBase {
 
     @Override
     public String toString() {
-        return expressions.toString();
+        StringBuilder out = new StringBuilder();
+        expressions.forEach(s -> out.append(s).append("\n"));
+        return out.toString();
     }
 
 }
