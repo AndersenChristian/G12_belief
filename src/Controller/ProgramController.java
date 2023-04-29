@@ -50,7 +50,6 @@ public class ProgramController {
                             s = s.replaceAll("[()]","");
                             data.addData(s);
                         });
-                        //data.addData(cnf.toArray(new String[0]));
                         System.out.println("Successfully added");
                     } catch (IllegalArgumentException e) {
                         this.view.errorMessage(e);

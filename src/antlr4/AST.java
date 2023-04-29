@@ -2,7 +2,7 @@ package antlr4;
 
 public interface AST {}
 
-class Start extends Expr implements AST {
+class Start implements AST {
     Expr expr;
 
     public Start(Expr expr) {
@@ -11,11 +11,6 @@ class Start extends Expr implements AST {
 
     public Expr convertToCNF() {
         return expr.convertToCNF();
-    }
-
-    @Override
-    public String toInputFormat() {
-        return expr.toInputFormat();
     }
 }
 
@@ -32,8 +27,7 @@ class Not extends Expr {
 
         if (cnf instanceof Atomic)
             return new Not(cnf);
-        //if (cnf instanceof Parenthesis)
-        //    return cnf.deMorgan(env);
+
         return cnf.deMorgan();
     }
 
@@ -56,6 +50,11 @@ class Not extends Expr {
     @Override
     public String toInputFormat() {
         return "~" + c1.toInputFormat();
+    }
+
+    @Override
+    public String toSATFormat() {
+        return "¬" + c1.toInputFormat();
     }
 }
 
@@ -88,6 +87,11 @@ class And extends Expr {
     @Override
     public String toInputFormat() {
         return c1.toInputFormat() + " & " + c2.toInputFormat();
+    }
+
+    @Override
+    public String toSATFormat() {
+        return c1.toInputFormat() + " ∧ " + c2.toInputFormat();
     }
 }
 
@@ -125,6 +129,11 @@ class Or extends Expr {
     public String toInputFormat() {
         return c1.toInputFormat() + " | " + c2.toInputFormat();
     }
+
+    @Override
+    public String toSATFormat() {
+        return c1.toInputFormat() + " ∨ " + c2.toInputFormat();
+    }
 }
 
 class Iff extends Expr {
@@ -146,6 +155,11 @@ class Iff extends Expr {
     public String toInputFormat() {
         return c1.toInputFormat() + " <=> " + c2.toInputFormat();
     }
+
+    @Override
+    public String toSATFormat() {
+        return c1.toInputFormat() + " ↔ " + c2.toInputFormat();
+    }
 }
 
 class Imp extends Expr {
@@ -164,6 +178,11 @@ class Imp extends Expr {
     @Override
     public String toInputFormat() {
         return c1.toInputFormat() + " => " + c2.toInputFormat();
+    }
+
+    @Override
+    public String toSATFormat() {
+        return c1.toInputFormat() + " → " + c2.toInputFormat();
     }
 }
 
@@ -196,6 +215,11 @@ class Parenthesis extends Expr {
     public String toInputFormat() {
         return '(' + expr.toInputFormat() + ')';
     }
+
+    @Override
+    public String toSATFormat() {
+        return '(' + expr.toInputFormat() + ')';
+    }
 }
 
 
@@ -225,6 +249,11 @@ class Atomic extends Expr {
 
     @Override
     public String toInputFormat() {
+        return name;
+    }
+
+    @Override
+    public String toSATFormat() {
         return name;
     }
 }

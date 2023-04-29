@@ -13,6 +13,8 @@ public abstract class Expr implements AST {
 
     abstract public String toInputFormat();
 
+    abstract public String toSATFormat();
+
     public Expr deMorgan() {
         return expr.deMorgan();
     }
