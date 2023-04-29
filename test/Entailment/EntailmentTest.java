@@ -78,15 +78,13 @@ public class EntailmentTest {
     public void longClauseTest1(){
         IKnowledgeBase kb = new KnowledgeBase();
         kb.addData(new String[]{"A" + or + "B", not + "A" + or + "B", not + "B" + or + "A", not + "B" + or + not + "A", not + "C" + or + "B"});
-        System.out.println("before:");
-        for(Data d: kb.getAllData()){
-            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
-        }
         ec.removeEntailments(kb);
-        System.out.println("\nafter:");
-        for(Data d: kb.getAllData()){
-            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
-        }
+    }
+    @Test
+    public void longClauseTest2(){
+        IKnowledgeBase kb = new KnowledgeBase();
+        kb.addData(new String[]{"A" + or + "B", not + "A" + or + "B", not + "B" + or + "A", not + "B" + or + not + "A"});
+        ec.removeEntailments(kb);
     }
 
     /*

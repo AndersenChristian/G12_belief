@@ -4,6 +4,7 @@ import Controller.Strategy;
 import Model.Data;
 import Model.IKnowledgeBase;
 import Model.Operator;
+import Model.TruthTable;
 
 import java.sql.SQLOutput;
 import java.util.*;
@@ -119,8 +120,8 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
         omegaString = omegaString.replace(Operator.OR.getOperator(), "");
         omegaString = omegaString.replace(Operator.NOT.getOperator(), "");
 
-        System.out.println("All variables with duplicates: "+omegaString);
-
+        // Add variables to list, remove copies of variable in string.
+        // Outputs list of unique variables
         while(omegaString.length()>0){
             clauseVariables.add(String.valueOf(omegaString.charAt(0)));
             omegaString = omegaString.replace(String.valueOf(omegaString.charAt(0)),"");
@@ -128,6 +129,10 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
         }
 
         System.out.println("All variables: "+clauseVariables);
+
+        // Create truth table of variables
+        TruthTable truthTable = new TruthTable(clauseVariables);
+        truthTable.printTable();
 
         if (remainClaus.isEmpty()) return;
     }
