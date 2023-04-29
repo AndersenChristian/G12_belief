@@ -4,5 +4,5 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Environment {
-    private final List<Expr> CNF = new ArrayList<>();
+    public final List<Expr> cnf = new ArrayList<>();
 }

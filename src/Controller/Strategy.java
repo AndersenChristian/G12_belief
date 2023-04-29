@@ -1,5 +1,5 @@
 package Controller;
 
 public enum Strategy {
-    TRUSTS_NEW, THRUST_OLD
+    TRUSTS_NEW, TRUSTS_OLD
 }
