@@ -19,8 +19,4 @@ public abstract class Expr implements AST {
 
     public Expr lawOfDistribution(Expr left) { return expr.lawOfDistribution(left); }
 
-    @Override
-    public String toString(){
-        return this.toInputFormat();
-    }
 }

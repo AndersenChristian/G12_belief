@@ -1,19 +1,13 @@
 package Controller;
 
-import Controller.CNF.CNF;
-import InputValidation.IValidation;
-import InputValidation.Regex;
 import Model.KnowledgeBase;
 import Model.IKnowledgeBase;
 import View.IView;
 import View.TUI;
 import antlr4.CNFConverter;
-import antlr4.Environment;
-import antlr4.Expr;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class ProgramController {
     private final IKnowledgeBase data = new KnowledgeBase();
