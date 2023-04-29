@@ -1,29 +1,20 @@
 package antlr4;
 
-public abstract class AST {}
+import jdk.jfr.BooleanFlag;
 
-class Start extends AST {
+import java.util.logging.Logger;
+
+public interface AST {}
+
+class Start extends Expr implements AST {
     Expr expr;
 
     public Start(Expr expr) {
         this.expr = expr;
     }
 
-    public Expr convertToCNF() {
-        return expr.convertToCNF();
-    }
-}
-
-class ExprInstance extends Expr {
-    Expr expr;
-
-    ExprInstance(Expr expr) {
-        this.expr = expr;
-    }
-
-    @Override
-    public Expr convertToCNF() {
-        return expr.convertToCNF();
+    public Expr convertToCNF(Environment env) {
+        return expr.convertToCNF(env);
     }
 
     @Override
@@ -40,8 +31,14 @@ class Not extends Expr {
     }
 
     @Override
-    public Expr convertToCNF() {
-        return new Not(this.c1.convertToCNF());
+    public Expr convertToCNF(Environment env) {
+        Expr cnf = this.c1.convertToCNF(env);
+
+        if (cnf instanceof Atomic)
+            return new Not(cnf);
+        //if (cnf instanceof Parenthesis)
+        //    return cnf.deMorgan(env);
+        return cnf.deMorgan(env);
     }
 
     @Override
@@ -59,8 +56,21 @@ class And extends Expr {
     }
 
     @Override
-    public Expr convertToCNF() {
+    public Expr convertToCNF(Environment env) {
+        Expr c1 = this.c1.convertToCNF(env);
+        Expr c2 = this.c2.convertToCNF(env);
+
         return new And(c1, c2);
+    }
+
+    @Override
+    public Expr deMorgan(Environment env){
+        return new Or(new Not(c1.deMorgan(env)), new Not(c2.deMorgan(env)));
+    }
+
+    @Override
+    public Expr lawOfDistribution(Environment env, Expr left){
+        return new And(c1.lawOfDistribution(env,left),c2.lawOfDistribution(env,left));
     }
 
     @Override
@@ -78,10 +88,15 @@ class Or extends Expr {
     }
 
     @Override
-    public Expr convertToCNF() {
-        Expr c1 = this.c1.convertToCNF();
-        Expr c2 = this.c2.convertToCNF();
-        return new Or(c1, c2);
+    public Expr convertToCNF(Environment env) {
+        Expr c1 = this.c1.convertToCNF(env);
+        Expr c2 = this.c2.convertToCNF(env);
+
+        if (c1 instanceof Parenthesis || c2 instanceof Parenthesis) {
+            return c1.lawOfDistribution(env, c2);
+        }
+
+        return new Or(c1, c2);//.convertToCNF(env);
     }
 
     @Override
@@ -99,10 +114,10 @@ class Iff extends Expr {
     }
 
     @Override
-    public Expr convertToCNF() {
-        Expr c1 = this.c1.convertToCNF();
-        Expr c2 = this.c2.convertToCNF();
-        return new Or(new And(new Not(c2), c1), new And(new Not(c1), c2));
+    public Expr convertToCNF(Environment env) {
+        Expr c1 = this.c1.convertToCNF(env);
+        Expr c2 = this.c2.convertToCNF(env);
+        return new And(new Parenthesis(new Imp(c1, c2)), new Parenthesis(new Imp(c2, c1))).convertToCNF(env);
     }
 
     @Override
@@ -120,15 +135,15 @@ class Imp extends Expr {
     }
 
     @Override
-    public Expr convertToCNF() {
-        Expr c1 = this.c1.convertToCNF();
-        Expr c2 = this.c2.convertToCNF();
-        return new Or(new Not(c1), new ExprInstance(c2));
+    public Expr convertToCNF(Environment env) {
+        Expr c1 = this.c1.convertToCNF(env);
+        Expr c2 = this.c2.convertToCNF(env);
+        return new Parenthesis(new Or(new Not(c1), c2)).convertToCNF(env);
     }
 
     @Override
     public String toInputFormat() {
-        return c1.toInputFormat() + "=>" + c2.toInputFormat();
+        return c1.toInputFormat() + " => " + c2.toInputFormat();
     }
 }
 
@@ -140,28 +155,28 @@ class Parenthesis extends Expr {
     }
 
     @Override
-    public Expr convertToCNF() {
-        return expr.convertToCNF();
+    public Expr convertToCNF(Environment env) {
+        Expr cnf = expr.convertToCNF(env);
+        if (cnf instanceof Parenthesis) return cnf;
+        return new Parenthesis(cnf);
     }
 
     @Override
     public String toInputFormat() {
-        return expr.toInputFormat();
+        return '(' + expr.toInputFormat() + ')';
     }
 }
 
 
 class Atomic extends Expr {
     String name;
-    boolean value;
 
-    public Atomic(String name, boolean value) {
+    public Atomic(String name) {
         this.name = name;
-        this.value = value;
     }
 
     @Override
-    public Expr convertToCNF() {
+    public Expr convertToCNF(Environment env) {
         return this;
     }
 

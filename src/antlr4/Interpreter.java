@@ -31,7 +31,7 @@ public class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicV
 
     @Override
     public AST visitAtomic(LogicParser.AtomicContext ctx) {
-        return new Atomic(ctx.getText(), false);
+        return new Atomic(ctx.getText());
     }
 
     @Override
