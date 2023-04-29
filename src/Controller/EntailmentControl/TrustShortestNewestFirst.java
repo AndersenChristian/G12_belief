@@ -104,23 +104,30 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
             toRemove.forEach(d -> remainClaus.remove(d));
         }
 
+        // TODO: Remove this test case
+        //remainClaus.add();
+
         // Find all variables
         String omegaString = "";
         ArrayList<String> clauseVariables = new ArrayList<String>();
-        for (int i=0; i<remainClaus.size(); i++){
+        for (int i=0; i < remainClaus.size(); i++){
             // Add string to
             omegaString += remainClaus.get(i).getClaus();
         }
-        omegaString.replace(Operator.OR.getOperator(), "");
-        omegaString.replace(Operator.NOT.getOperator(), "");
+
+        // Remove all OR's and Not's
+        omegaString = omegaString.replace(Operator.OR.getOperator(), "");
+        omegaString = omegaString.replace(Operator.NOT.getOperator(), "");
+
+        System.out.println("All variables with duplicates: "+omegaString);
 
         while(omegaString.length()>0){
-            //clauseVariables.add(String.valueOf(omegaString.charAt(0)));
+            clauseVariables.add(String.valueOf(omegaString.charAt(0)));
             omegaString = omegaString.replace(String.valueOf(omegaString.charAt(0)),"");
             System.out.println(omegaString);
         }
 
-        System.out.println(clauseVariables);
+        System.out.println("All variables: "+clauseVariables);
 
         if (remainClaus.isEmpty()) return;
     }

@@ -1,5 +1,6 @@
 package Entailment;
 
+import Controller.CNF.Not;
 import Controller.EntailmentControl.TrustShortestNewestFirst;
 import Controller.Strategy;
 import Model.Data;
@@ -62,6 +63,21 @@ public class EntailmentTest {
     public void ecTest3(){
         IKnowledgeBase kb = new KnowledgeBase();
         kb.addData(new String[]{not + "A","A" + or + "B" + or + "C", not + "B" + or + "C", not + "C"});
+        System.out.println("before:");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        }
+        ec.removeEntailments(kb);
+        System.out.println("\nafter:");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        }
+    }
+
+    @Test
+    public void longClauseTest1(){
+        IKnowledgeBase kb = new KnowledgeBase();
+        kb.addData(new String[]{"A" + or + "B", not + "A" + or + "B", not + "B" + or + "A", not + "B" + or + not + "A", not + "C" + or + "B"});
         System.out.println("before:");
         for(Data d: kb.getAllData()){
             System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");

@@ -42,6 +42,7 @@ public class KnowledgeBase implements IKnowledgeBase {
         this.expressions.add(new Data(s, value));
     }
 
+
     @Override
     public void removeDataAtIndex(int index) {
         expressions.remove(index);
