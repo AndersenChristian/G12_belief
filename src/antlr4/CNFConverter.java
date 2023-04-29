@@ -24,8 +24,7 @@ public class CNFConverter {
         // and parse anything from the grammar for "start"
         ParseTree parseTree = parser.start();
         if (parser.getNumberOfSyntaxErrors() > 0) {
-            System.err.println("Error: Syntax does not match with logic grammar");
-            System.exit(1);
+            throw new IllegalArgumentException("Input does not match grammar!");
         }
 
         // Construct an interpreter and run it on the parse tree

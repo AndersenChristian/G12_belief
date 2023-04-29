@@ -46,14 +46,18 @@ public class ProgramController {
                     this.view.displayKnowledgeBase(data);
                 }
                 default -> {
-                    List<String> cnf = cnfConverter.convertToCNF(input);
-                    // Split & and remove parenthesis
-                    cnf.forEach(s -> {
-                        s = s.replaceAll("[()]","");
-                        data.addData(s);
-                    });
-                    //data.addData(cnf.toArray(new String[0]));
-                    System.out.println("Successfully added");
+                    try {
+                        List<String> cnf = cnfConverter.convertToCNF(input);
+                        // Split & and remove parenthesis
+                        cnf.forEach(s -> {
+                            s = s.replaceAll("[()]","");
+                            data.addData(s);
+                        });
+                        //data.addData(cnf.toArray(new String[0]));
+                        System.out.println("Successfully added");
+                    } catch (IllegalArgumentException e) {
+                        this.view.errorMessage(e);
+                    }
                 }
             }
         }
