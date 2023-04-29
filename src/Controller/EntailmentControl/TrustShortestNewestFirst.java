@@ -132,6 +132,14 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
 
         // Create truth table of variables
         TruthTable truthTable = new TruthTable(clauseVariables);
+
+        // Add clauses
+        for (int i = 0; i < remainClaus.size(); i++) {
+            truthTable.addClause(remainClaus.get(i).getClaus());
+        }
+
+        // TODO: Remove dummy test clauses
+
         truthTable.printTable();
 
         if (remainClaus.isEmpty()) return;
