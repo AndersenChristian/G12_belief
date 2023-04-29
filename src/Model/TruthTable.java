@@ -63,9 +63,9 @@ public class TruthTable {
         clauseTable.add(new clauseColumn(clause, columnLength, this));
         String checkClause = getLastClauseColumn().clause;
         int indexToOperate = 0;
-        boolean isNegated = false;
 
         while (checkClause.length() > 0) {
+            boolean isNegated=false;
             if (checkClause.charAt(0) == Operator.NOT.getOperator().charAt(0)) {
                 isNegated = true;
                 for (int i = 0; i < variableRows; i++) {

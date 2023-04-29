@@ -77,7 +77,7 @@ public class EntailmentTest {
     @Test
     public void longClauseTest1(){
         IKnowledgeBase kb = new KnowledgeBase();
-        kb.addData(new String[]{"A" + or + "B", not + "A" + or + "B", not + "B" + or + "A", not + "B" + or + not + "A", not + "C" + or + "B"});
+        kb.addData(new String[]{"A" + or + "B", not + "A" + or + "B", not + "B" + or + "A", not + "B" + or + not + "A", not + "C" + or + "B" + or + not + "A"});
         ec.removeEntailments(kb);
     }
     @Test
