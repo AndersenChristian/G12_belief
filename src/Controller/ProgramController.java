@@ -45,6 +45,9 @@ public class ProgramController {
                 case "view" -> {
                     this.view.displayKnowledgeBase(data);
                 }
+                case "validate" -> {
+
+                }
                 default -> {
                     try {
                         List<String> cnf = cnfConverter.convertToCNF(input);
