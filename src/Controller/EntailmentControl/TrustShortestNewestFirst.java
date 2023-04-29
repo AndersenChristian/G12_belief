@@ -139,9 +139,14 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
             truthTable.addClause(clause);
         }
 
-        // TODO: Remove dummy test clauses
-
         truthTable.printTable();
+
+        // Check for Contradictions with composite clauses using truth tables
+        if (truthTable.checkContradictions()){
+            System.out.println("Contradiction found");
+        }else {
+            System.out.println("No contradiction found");
+        }
 
         if (remainClaus.isEmpty()) return;
     }

@@ -94,6 +94,30 @@ public class TruthTable {
         }
     }
 
+    public boolean checkContradictions(){
+
+        boolean contradiction = true;
+        boolean[] checkList = new boolean[columnLength];
+        //for (int b = 0; b < checkList.length; b++) {
+            for (int c = 0; c < columnLength; c++) {
+                for (int r = 0; r < clauseTable.size(); r++) {
+                    if(clauseTable.get(r).column[c] == false){
+                        checkList[c]=true;
+                        break;
+                    }
+                }
+            }
+        //}
+
+        for (int i = 0; i < checkList.length; i++) {
+            if(!checkList[i]){
+                contradiction = false;
+            }
+        }
+
+        return contradiction;
+    }
+
     public clauseColumn getClauseColumn(int index){
         return clauseTable.get(index);
     }
