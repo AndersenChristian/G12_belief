@@ -61,26 +61,37 @@ public class TruthTable {
 
     public void addClause(String clause){
         clauseTable.add(new clauseColumn(clause, columnLength, this));
+        String checkClause = getLastClauseColumn().clause;
         int indexToOperate = 0;
         boolean isNegated = false;
 
-        if(getLastClauseColumn().clause.charAt(0) == Operator.OR.getOperator().charAt(0)) {
-            isNegated = true;
-            for (int i = 0; i < variableRows; i++) {
-                if (variableList.get(i).charAt(0) == getLastClauseColumn().clause.charAt(1)) {
-                    indexToOperate = i;
+        while (checkClause.length() > 0) {
+            if (checkClause.charAt(0) == Operator.NOT.getOperator().charAt(0)) {
+                isNegated = true;
+                for (int i = 0; i < variableRows; i++) {
+                    if (variableList.get(i).charAt(0) == checkClause.charAt(1)) {
+                        indexToOperate = i;
+                        checkClause = checkClause.substring(2);
+                        if (checkClause.length()>0){
+                            checkClause = checkClause.substring(1);
+                        }
+                        break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < variableRows; i++) {
+                    if (variableList.get(i).charAt(0) == checkClause.charAt(0)) {
+                        indexToOperate = i;
+                        checkClause = checkClause.substring(1);
+                        if (checkClause.length()>0){
+                            checkClause = checkClause.substring(1);
+                        }
+                        break;
+                    }
                 }
             }
+            getLastClauseColumn().orWith(indexToOperate, isNegated);
         }
-        else {
-            for (int i = 0; i < variableRows; i++) {
-                if (variableList.get(i).charAt(0) == getLastClauseColumn().clause.charAt(0)) {
-                    indexToOperate = i;
-                }
-            }
-        }
-        getLastClauseColumn().orWith(indexToOperate,isNegated);
-
     }
 
     public clauseColumn getClauseColumn(int index){
