@@ -42,6 +42,16 @@ class Not extends Expr {
     }
 
     @Override
+    public Expr deMorgan(Environment env){
+        return c1.deMorgan(env);
+    }
+
+    @Override
+    public Expr lawOfDistribution(Environment env, Expr left) {
+        return c1.lawOfDistribution(env, left);
+    }
+
+    @Override
     public String toInputFormat() {
         return "~" + c1.toInputFormat();
     }
@@ -97,6 +107,16 @@ class Or extends Expr {
         }
 
         return new Or(c1, c2);//.convertToCNF(env);
+    }
+
+    @Override
+    public Expr lawOfDistribution(Environment env, Expr left) {
+        return new Or(left, c2.lawOfDistribution(env, left));
+    }
+
+    @Override
+    public Expr deMorgan(Environment env){
+        return new And(new Not(c1.deMorgan(env)), new Not(c2.deMorgan(env)));
     }
 
     @Override
@@ -162,6 +182,16 @@ class Parenthesis extends Expr {
     }
 
     @Override
+    public Expr deMorgan(Environment env){
+        return expr.deMorgan(env);
+    }
+
+    @Override
+    public Expr lawOfDistribution(Environment env, Expr left){
+        return expr.lawOfDistribution(env, left);
+    }
+
+    @Override
     public String toInputFormat() {
         return '(' + expr.toInputFormat() + ')';
     }
@@ -178,6 +208,18 @@ class Atomic extends Expr {
     @Override
     public Expr convertToCNF(Environment env) {
         return this;
+    }
+
+    @Override
+    public Expr deMorgan(Environment env){
+        return this;
+    }
+
+    @Override
+    public Expr lawOfDistribution(Environment env, Expr left){
+        if (left instanceof Atomic)
+            return new Or(left,this);
+        return left.lawOfDistribution(env, this);
     }
 
     @Override
