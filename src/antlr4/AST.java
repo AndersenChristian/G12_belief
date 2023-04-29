@@ -1,10 +1,5 @@
 package antlr4;
 
-import jdk.jfr.BooleanFlag;
-
-import java.util.concurrent.atomic.AtomicMarkableReference;
-import java.util.logging.Logger;
-
 public interface AST {}
 
 class Start extends Expr implements AST {
@@ -14,8 +9,8 @@ class Start extends Expr implements AST {
         this.expr = expr;
     }
 
-    public Expr convertToCNF(Environment env) {
-        return expr.convertToCNF(env);
+    public Expr convertToCNF() {
+        return expr.convertToCNF();
     }
 
     @Override
@@ -32,30 +27,30 @@ class Not extends Expr {
     }
 
     @Override
-    public Expr convertToCNF(Environment env) {
-        Expr cnf = this.c1.convertToCNF(env);
+    public Expr convertToCNF() {
+        Expr cnf = this.c1.convertToCNF();
 
         if (cnf instanceof Atomic)
             return new Not(cnf);
         //if (cnf instanceof Parenthesis)
         //    return cnf.deMorgan(env);
-        return cnf.deMorgan(env);
+        return cnf.deMorgan();
     }
 
     @Override
-    public Expr deMorgan(Environment env){
-        return c1.deMorgan(env);
+    public Expr deMorgan(){
+        return c1.deMorgan();
     }
 
     @Override
-    public Expr lawOfDistribution(Environment env, Expr left) {
+    public Expr lawOfDistribution(Expr left) {
         if (c1 instanceof Atomic) {
             if (left instanceof Atomic)
                 return new Or(this,left);
-            return left.lawOfDistribution(env, this);
+            return left.lawOfDistribution(this);
         }
         System.out.println("shouldn't happpend");
-        return c1.lawOfDistribution(env, left);
+        return c1.lawOfDistribution(left);
     }
 
     @Override
@@ -73,21 +68,21 @@ class And extends Expr {
     }
 
     @Override
-    public Expr convertToCNF(Environment env) {
-        Expr c1 = this.c1.convertToCNF(env);
-        Expr c2 = this.c2.convertToCNF(env);
+    public Expr convertToCNF() {
+        Expr c1 = this.c1.convertToCNF();
+        Expr c2 = this.c2.convertToCNF();
 
         return new And(c1, c2);
     }
 
     @Override
-    public Expr deMorgan(Environment env){
-        return new Or(new Not(c1.deMorgan(env)), new Not(c2.deMorgan(env)));
+    public Expr deMorgan() {
+        return new Or(new Not(c1.deMorgan()), new Not(c2.deMorgan()));
     }
 
     @Override
-    public Expr lawOfDistribution(Environment env, Expr left){
-        return new And(new Parenthesis(c1.lawOfDistribution(env,left)),new Parenthesis(c2.lawOfDistribution(env,left)));
+    public Expr lawOfDistribution(Expr left){
+        return new And(new Parenthesis(c1.lawOfDistribution(left)),new Parenthesis(c2.lawOfDistribution(left)));
     }
 
     @Override
@@ -105,25 +100,25 @@ class Or extends Expr {
     }
 
     @Override
-    public Expr convertToCNF(Environment env) {
-        Expr c1 = this.c1.convertToCNF(env);
-        Expr c2 = this.c2.convertToCNF(env);
+    public Expr convertToCNF() {
+        Expr c1 = this.c1.convertToCNF();
+        Expr c2 = this.c2.convertToCNF();
 
         if (c1 instanceof Parenthesis || c2 instanceof Parenthesis) {
-            return c1.lawOfDistribution(env, c2);
+            return c1.lawOfDistribution(c2);
         }
 
         return new Or(c1, c2);//.convertToCNF(env);
     }
 
     @Override
-    public Expr lawOfDistribution(Environment env, Expr left) {
-        return new Or(left, c2.lawOfDistribution(env, left));
+    public Expr lawOfDistribution(Expr left) {
+        return new Or(left, c2.lawOfDistribution(left));
     }
 
     @Override
-    public Expr deMorgan(Environment env){
-        return new And(new Not(c1.deMorgan(env)), new Not(c2.deMorgan(env)));
+    public Expr deMorgan(){
+        return new And(new Not(c1.deMorgan()), new Not(c2.deMorgan()));
     }
 
     @Override
@@ -141,10 +136,10 @@ class Iff extends Expr {
     }
 
     @Override
-    public Expr convertToCNF(Environment env) {
-        Expr c1 = this.c1.convertToCNF(env);
-        Expr c2 = this.c2.convertToCNF(env);
-        return new And(new Parenthesis(new Imp(c1, c2)), new Parenthesis(new Imp(c2, c1))).convertToCNF(env);
+    public Expr convertToCNF() {
+        Expr c1 = this.c1.convertToCNF();
+        Expr c2 = this.c2.convertToCNF();
+        return new And(new Parenthesis(new Imp(c1, c2)), new Parenthesis(new Imp(c2, c1))).convertToCNF();
     }
 
     @Override
@@ -162,8 +157,8 @@ class Imp extends Expr {
     }
 
     @Override
-    public Expr convertToCNF(Environment env) {
-        return new Parenthesis(new Or(new Not(this.c1), this.c2)).convertToCNF(env);
+    public Expr convertToCNF() {
+        return new Parenthesis(new Or(new Not(this.c1), this.c2)).convertToCNF();
     }
 
     @Override
@@ -180,21 +175,21 @@ class Parenthesis extends Expr {
     }
 
     @Override
-    public Expr convertToCNF(Environment env) {
-        Expr cnf = expr.convertToCNF(env);
+    public Expr convertToCNF() {
+        Expr cnf = expr.convertToCNF();
         //if (cnf instanceof Or) return cnf.lawOfDistribution(env, ((Or) cnf).c2);
         if (cnf instanceof Parenthesis) return cnf;
         return new Parenthesis(cnf);
     }
 
     @Override
-    public Expr deMorgan(Environment env){
-        return expr.deMorgan(env);
+    public Expr deMorgan(){
+        return expr.deMorgan();
     }
 
     @Override
-    public Expr lawOfDistribution(Environment env, Expr left){
-        return expr.lawOfDistribution(env, left);
+    public Expr lawOfDistribution(Expr left){
+        return expr.lawOfDistribution(left);
     }
 
     @Override
@@ -212,20 +207,20 @@ class Atomic extends Expr {
     }
 
     @Override
-    public Expr convertToCNF(Environment env) {
+    public Expr convertToCNF() {
         return this;
     }
 
     @Override
-    public Expr deMorgan(Environment env){
+    public Expr deMorgan(){
         return this;
     }
 
     @Override
-    public Expr lawOfDistribution(Environment env, Expr left){
+    public Expr lawOfDistribution(Expr left){
         if (left instanceof Atomic)
             return new Or(left,this);
-        return left.lawOfDistribution(env, this);
+        return left.lawOfDistribution(this);
     }
 
     @Override

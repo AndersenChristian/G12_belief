@@ -10,13 +10,3 @@ target/
 !pom.xml
 
 /out
-/src/antlr4/Logic.interp
-/src/antlr4/Logic.tokens
-/src/antlr4/LogicBaseListener.java
-/src/antlr4/LogicBaseVisitor.java
-/src/antlr4/LogicLexer.java
-/src/antlr4/LogicLexer.interp
-/src/antlr4/LogicLexer.tokens
-/src/antlr4/LogicListener.java
-/src/antlr4/LogicParser.java
-/src/antlr4/LogicVisitor.java
