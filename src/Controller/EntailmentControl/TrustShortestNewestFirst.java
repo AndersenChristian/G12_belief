@@ -135,7 +135,22 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
 
         // Add clauses
         for (int i = 0; i < remainClaus.size(); i++) {
-            truthTable.addClause(remainClaus.get(i).getClaus());
+            String clause = remainClaus.get(i).getClaus();
+            truthTable.addClause(clause);
+
+            // Make truth values match
+                // Copy first variable
+            /*
+                if (clause.charAt(0) == Operator.NOT.getOperator().charAt(0)){
+                    truthTable.getLastClauseColumn().;
+                }
+                else {
+
+                }
+            while (false){//clause.length()>0){
+
+            }*/
+
         }
 
         // TODO: Remove dummy test clauses
