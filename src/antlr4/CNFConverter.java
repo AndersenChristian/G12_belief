@@ -29,9 +29,11 @@ public class CNFConverter {
 
         // Construct an interpreter and run it on the parse tree
         Interpreter interpreter = new Interpreter();
+        // Run visitor on parse
         Start result = (Start) interpreter.visit(parseTree);
-        Environment env = new Environment();
-        Expr e = result.convertToCNF(env); // return in cnf form
+        // Return expression in cnf form
+        Expr e = result.convertToCNF();
+        // Return List of CNF's
         return List.of(e.toInputFormat().split(" & "));
     }
 }
