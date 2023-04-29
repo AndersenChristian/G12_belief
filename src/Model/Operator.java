@@ -4,16 +4,16 @@ public enum Operator {
     OR("|"),
     AND("&"),
     NOT("~"),
-    IFF("<=>"),
-    IMP("=>");
+    IFF("=>"),
+    IMP("<=>");
 
-    private final String SYMBOL;
+    private final String OPERATOR;
 
     Operator(String s) {
-        this.SYMBOL = s;
+        this.OPERATOR = s;
     }
 
     public String getOperator() {
-        return this.SYMBOL;
+        return this.OPERATOR;
     }
 }

@@ -1,21 +1,47 @@
 package Model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class KnowledgeBase implements IKnowledgeBase {
-    ArrayList<String> expressions = new ArrayList<>();
+    List<Data> expressions = new ArrayList<>();
+
+    public KnowledgeBase(){}
+
+
+    /**
+     * Used to copy the object
+     *
+     * @param data
+     */
+    public KnowledgeBase(IKnowledgeBase data){
+        Arrays.stream(data.getAllData())
+                .forEach(d -> expressions.add(new Data(d)));
+    }
 
     @Override
     public void addData(String[] list) {
-        this.expressions.addAll(List.of(list));
+        addData(list,1);
+    }
+
+    @Override
+    public void addData(String[] list, int value) {
+        Arrays.stream(list)
+                .forEach(s -> this.addData(s,value));
     }
 
     @Override
     public void addData(String s){
-        this.expressions.add(s);
+        addData(s, 1); //set 1 as default value
     }
+
+    @Override
+    public void addData(String s, int value){
+        s = this.sortClaus(s);
+        this.expressions.add(new Data(s, value));
+    }
+
 
     @Override
     public void removeDataAtIndex(int index) {
@@ -23,18 +49,36 @@ public class KnowledgeBase implements IKnowledgeBase {
     }
 
     @Override
-    public int getIndex(String s) {
-        return IntStream.range(0, expressions.size()).filter(i -> s.equals(expressions.get(i))).findFirst().orElse(-1);
+    public void removeData(Data data) {
+        expressions.remove(data);
     }
 
     @Override
-    public String getDataAtIndex(int index) {
+    public int getIndex(String s) {
+        return IntStream.range(0, expressions.size())
+                .filter(i -> s.equals(expressions.get(i)))
+                .findFirst()
+                .orElse(-1);
+    }
+
+    @Override
+    public int getSize() {
+        return expressions.size();
+    }
+
+    @Override
+    public Data getDataAtIndex(int index) {
         return expressions.get(index);
     }
 
     @Override
-    public String[] getAllData() {
-        return expressions.toArray(String[]::new);
+    public int getValueAtIndex(int index) {
+        return 0;
+    }
+
+    @Override
+    public Data[] getAllData() {
+        return expressions.toArray(Data[]::new);
     }
 
     @Override
@@ -42,6 +86,37 @@ public class KnowledgeBase implements IKnowledgeBase {
         StringBuilder out = new StringBuilder();
         expressions.forEach(s -> out.append(s).append("\n"));
         return out.toString();
+    }
+
+    private String sortClaus(String in){
+        String[] variables = in.split("[" + Operator.OR.getOperator() + "]");
+        List<TempData> tempData = new ArrayList<>();
+        Arrays.stream(variables).forEach(s -> tempData.add(new TempData(s.charAt(s.length()-1),s.length() == 2)));
+
+        tempData.sort(Comparator.comparing(TempData::getC));
+        String out = tempData.stream()
+                .map(o -> o.toString() + Operator.OR.getOperator())
+                .collect(Collectors.joining());
+        return out.substring(0, out.length()-1);
+
+    }
+
+    private class TempData{
+        char c;
+        boolean isNegated;
+        public TempData(char c, boolean isNegated){
+            this.c = c;
+            this.isNegated = isNegated;
+        }
+
+        public char getC(){
+            return this.c;
+        }
+
+        @Override
+        public String toString(){
+            return isNegated ? Operator.NOT.getOperator() + c: String.valueOf(c);
+        }
     }
 
 }
