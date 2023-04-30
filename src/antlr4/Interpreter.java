@@ -26,7 +26,7 @@ public class Interpreter extends AbstractParseTreeVisitor<AST> implements LogicV
 
     @Override
     public AST visitIFF(LogicParser.IFFContext ctx) {
-        return new Iff((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
+        return new Bimp((Expr) visit(ctx.c1), (Expr) visit(ctx.c2));
     }
 
     @Override

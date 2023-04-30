@@ -148,10 +148,10 @@ class Or extends Expr {
     }
 }
 
-class Iff extends Expr {
+class Bimp extends Expr {
     Expr c1, c2;
 
-    Iff(Expr c1, Expr c2) {
+    Bimp(Expr c1, Expr c2) {
         this.c1 = c1;
         this.c2 = c2;
     }
