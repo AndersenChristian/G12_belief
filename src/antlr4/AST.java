@@ -15,26 +15,15 @@ class Start implements AST {
 }
 
 abstract class Expr implements AST {
-    private Expr expr;
-
-    public Expr() {}
-
-    public Expr(Expr expr) {
-        this.expr = expr;
-    }
-
     abstract public Expr convertToCNF();
 
     abstract public String toInputFormat();
 
     abstract public String toSATFormat();
 
-    public Expr deMorgan() {
-        return expr.deMorgan();
-    }
+    abstract public Expr deMorgan();
 
-    public Expr lawOfDistribution(Expr left) { return expr.lawOfDistribution(left); }
-
+    abstract Expr lawOfDistribution(Expr left);
 }
 
 class Not extends Expr {
@@ -183,6 +172,18 @@ class Iff extends Expr {
     public String toSATFormat() {
         return c1.toInputFormat() + " ↔ " + c2.toInputFormat();
     }
+
+    @Override
+    public Expr deMorgan() {
+        // Should not happen
+        return null;
+    }
+
+    @Override
+    Expr lawOfDistribution(Expr left) {
+        // Should not happen
+        return null;
+    }
 }
 
 class Imp extends Expr {
@@ -206,6 +207,18 @@ class Imp extends Expr {
     @Override
     public String toSATFormat() {
         return c1.toInputFormat() + " → " + c2.toInputFormat();
+    }
+
+    @Override
+    public Expr deMorgan() {
+        // Should not happen
+        return null;
+    }
+
+    @Override
+    Expr lawOfDistribution(Expr left) {
+        // Should not happen
+        return null;
     }
 }
 
