@@ -14,6 +14,29 @@ class Start implements AST {
     }
 }
 
+abstract class Expr implements AST {
+    private Expr expr;
+
+    public Expr() {}
+
+    public Expr(Expr expr) {
+        this.expr = expr;
+    }
+
+    abstract public Expr convertToCNF();
+
+    abstract public String toInputFormat();
+
+    abstract public String toSATFormat();
+
+    public Expr deMorgan() {
+        return expr.deMorgan();
+    }
+
+    public Expr lawOfDistribution(Expr left) { return expr.lawOfDistribution(left); }
+
+}
+
 class Not extends Expr {
     Expr c1;
 

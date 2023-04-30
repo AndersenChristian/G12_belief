@@ -1,12 +1,12 @@
 antlr4 = java org.antlr.v4.Tool
 grun = java org.antlr.v4.gui.TestRig
-SRCFILES = main.java AST.java Environment.java
+SRCFILES = CNFConverter.java AST.java Environment.java
 GENERATED = LogicParser.java LogicBaseVisitor.java LogicVisitor.java LogicLexer.java
 
 all:
 	make tree
 
-main.class:	$(SRCFILES) $(GENERATED) Logic.g4
+CNFConverter.class:	$(SRCFILES) $(GENERATED) Logic.g4
 	javac  $(SRCFILES) $(GENERATED)
 
 LogicLexer.java:	Logic.g4
@@ -15,7 +15,7 @@ LogicLexer.java:	Logic.g4
 LogicLexer.class: LogicLexer.java
 	javac $(GENERATED)
 
-test:	main.class input.txt
+test:   CNFConverter.class input.txt
 	java main input.txt
 
 tree:	LogicLexer.class Logic.g4 input.txt
