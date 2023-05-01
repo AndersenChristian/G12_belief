@@ -38,7 +38,7 @@ public class KnowledgeBase implements IKnowledgeBase {
 
     @Override
     public void addData(String s, int value){
-        s = this.sortClaus(s);
+        //s = this.sortClaus(s);
         this.expressions.add(new Data(s, value));
     }
 
@@ -83,7 +83,9 @@ public class KnowledgeBase implements IKnowledgeBase {
 
     @Override
     public String toString() {
-        return expressions.toString();
+        StringBuilder out = new StringBuilder();
+        expressions.forEach(s -> out.append(s.toString()).append("\n"));
+        return out.toString();
     }
 
     private String sortClaus(String in){

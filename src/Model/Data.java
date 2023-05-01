@@ -41,4 +41,9 @@ public class Data {
     public Data getDataInKnowledgeBaseReference() {
         return dataInKnowledgeBaseReference;
     }
+
+    @Override
+    public String toString(){
+        return claus;
+    }
 }
