@@ -20,7 +20,7 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
     }
 
     @Override
-    public void removeEntailments(IKnowledgeBase data) {
+    public void removeEntailments(IKnowledgeBase data, IKnowledgeBase original) {
 
         // Copy the knowledge base
         Stream.of(data.getAllData()).forEach(d -> remainClaus.add(new Data(d)));
@@ -139,10 +139,20 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
             truthTable.addClause(clause);
         }
 
-        // TODO: Remove dummy test clauses
-
         truthTable.printTable();
 
+        // Check for Contradictions with composite clauses using truth tables
+        if (truthTable.checkContradictions()){
+            System.out.println("Contradiction found");
+        }else {
+            System.out.println("No contradiction found");
+        }
+
         if (remainClaus.isEmpty()) return;
+    }
+
+    @Override
+    public Data[] whatWasRemoved() {
+        return new Data[0]; //TODO
     }
 }

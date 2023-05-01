@@ -5,13 +5,16 @@ import Model.IKnowledgeBase;
 import Model.KnowledgeBase;
 import Model.Operator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class EntailmentTrustOrder implements IEntailmentCheck {
-    boolean logEnabled = false;
+    private boolean logEnabled = false;
+    private Data[] clausToRemove;
+    int amountOfClaus;
 
     /**
      * This method need access to the actual IKnowledgeBase, since it will remove entailments.
@@ -21,13 +24,15 @@ public class EntailmentTrustOrder implements IEntailmentCheck {
      * @param data the implemented knowledgebase. It is expected that the claus in the knowledge base is sorted, so that B|A would never happen, but instead would be A|B
      */
     @Override
-    public void removeEntailments(IKnowledgeBase data) {
+    public void removeEntailments(IKnowledgeBase data, IKnowledgeBase original) {
         AtomicInteger bestResult = new AtomicInteger(Integer.MAX_VALUE);
+        amountOfClaus = data.getSize();
+        LOG("amount of claus: " + amountOfClaus);
         Arrays.stream(
                 data.getDataAtIndex(0)
                         .getClaus()
                         .split("["+ Operator.OR.getOperator() +"]"))
-                .parallel() //maybe possible to parallel - ignore until working in single threat
+                //.parallel() //maybe possible to parallel - ignore until working in single threat
                 .forEach(s -> {
                     int result = bestResult(s, new KnowledgeBase(data),1, 0);
                     if (result < bestResult.get()) bestResult.set(result);
@@ -50,7 +55,7 @@ public class EntailmentTrustOrder implements IEntailmentCheck {
         LOG(binary.toString());
         LOG(String.valueOf(binary.length()));
 
-        Data[] clausToRemove = IntStream.range(0, binary.length())
+        clausToRemove = IntStream.range(0, binary.length())
                 .filter(i -> binary.charAt(i) == '1')
                 .mapToObj(data::getDataAtIndex)
                 .toArray(Data[]::new);
@@ -60,7 +65,12 @@ public class EntailmentTrustOrder implements IEntailmentCheck {
         }
 
         Arrays.stream(clausToRemove)
-                .forEach(data::removeData);
+                .forEach(original::removeData);
+    }
+
+    @Override
+    public Data[] whatWasRemoved() {
+        return clausToRemove;
     }
 
     private int bestResult(String believe, IKnowledgeBase copyData, int dept, int currentDeleteValue){
@@ -109,7 +119,7 @@ public class EntailmentTrustOrder implements IEntailmentCheck {
                         .toArray(Data[]::new))
                 .forEach(copyData::removeData);
         for(int i: indexToRemove){
-            currentDeleteValue += Math.pow(2,i+dept);
+            currentDeleteValue += Math.pow(2,amountOfClaus - (i+dept));
         }
 
         if(copyData.getAllData().length == 0) return currentDeleteValue;
@@ -126,6 +136,8 @@ public class EntailmentTrustOrder implements IEntailmentCheck {
                     int result = bestResult(s, new KnowledgeBase(copyData),dept, finalCurrentDeleteValue);
                     if (result < bestResult.get()) bestResult.set(result);
                 });
+
+        LOG((String.valueOf(bestResult.get())));
 
         return bestResult.get();
     }

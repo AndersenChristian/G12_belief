@@ -27,7 +27,7 @@ public class EntailmentTrustOrderTest {
             System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
         System.out.print("\n\n");
-        ec.removeEntailments(kb);
+        ec.removeEntailments(kb, kb);
 
         System.out.println("\nafter:");
         for(Data d: kb.getAllData()){
@@ -49,7 +49,55 @@ public class EntailmentTrustOrderTest {
             System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
         }
         System.out.print("\n\n");
-        ec.removeEntailments(kb);
+        ec.removeEntailments(kb, kb);
+
+        System.out.println("\nafter:");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        }
+    }
+
+    @Test
+    public void ecTest3(){
+        ec.enableLOG(true);
+        IKnowledgeBase kb = new KnowledgeBase();
+        kb.addData(new String[]{
+                "A" + or + "B",
+                not + "A",
+                not + "B"});
+        System.out.println("before:");
+
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        }
+        System.out.print("\n\n");
+        ec.removeEntailments(kb, kb);
+
+        System.out.println("\nafter:");
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        }
+    }
+
+    @Test
+    public void ecTest4(){
+        //ec.enableLOG(true);
+        IKnowledgeBase kb = new KnowledgeBase();
+        kb.addData(new String[]{
+                "A" + or + "B",
+                not + "A",
+                not + "Q" + or + "H",
+                not +"H" + or + "Q",
+                not + "A"+ or+"B",
+                not + "B"+or+"A"
+        });
+        System.out.println("before:");
+
+        for(Data d: kb.getAllData()){
+            System.out.print(d.getClaus().replaceAll("OR", "|").replaceAll("AND", "&") + "\t");
+        }
+        System.out.print("\n\n");
+        ec.removeEntailments(kb, kb);
 
         System.out.println("\nafter:");
         for(Data d: kb.getAllData()){

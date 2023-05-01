@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.Strategy;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,7 +41,7 @@ public class KnowledgeBase implements IKnowledgeBase {
     @Override
     public void addData(String s, int value){
         //s = this.sortClaus(s);
-        this.expressions.add(new Data(s, value));
+        this.expressions.add(new Data(s.replaceAll(" ", ""), value));
     }
 
 
@@ -79,6 +81,38 @@ public class KnowledgeBase implements IKnowledgeBase {
     @Override
     public Data[] getAllData() {
         return expressions.toArray(Data[]::new);
+    }
+
+    @Override
+    public IKnowledgeBase sort(Strategy strategy) {
+        KnowledgeBase out = new KnowledgeBase();
+        for (Data d : expressions){
+            out.addData(d);
+        }
+        switch (strategy){
+            case TRUST_NEW -> {
+                Collections.reverse(out.getExpressions());
+            }
+            case TRUST_OLD -> {
+                //DO nothing
+            }
+            case TRUST_LONG -> {
+                //Collections.sort(out.getExpressions(),Comparator.comparingInt(Data::getSize));
+                out.getExpressions().sort(Comparator.comparingInt(Data::getSize).reversed());
+            }
+            case TRUST_SHORT -> {
+                out.getExpressions().sort(Comparator.comparingInt(Data::getSize));
+            }
+        }
+        return out;
+    }
+
+    public void addData(Data d){
+        expressions.add(d);
+    }
+
+    public List<Data> getExpressions() {
+        return expressions;
     }
 
     @Override
