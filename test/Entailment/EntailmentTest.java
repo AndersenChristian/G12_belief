@@ -1,6 +1,5 @@
 package Entailment;
 
-import Controller.CNF.Not;
 import Controller.EntailmentControl.TrustShortestNewestFirst;
 import Controller.Strategy;
 import Model.Data;
