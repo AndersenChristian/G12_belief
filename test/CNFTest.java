@@ -1,4 +1,3 @@
-import Model.KnowledgeBase;
 import antlr4.CNFConverter;
 import org.junit.Assert;
 import org.junit.Before;

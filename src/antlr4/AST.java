@@ -27,15 +27,15 @@ abstract class Expr implements AST {
 }
 
 class Not extends Expr {
-    Expr c1;
+    Expr expr;
 
     Not(Expr c1) {
-        this.c1 = c1;
+        this.expr = c1;
     }
 
     @Override
     public Expr convertToCNF() {
-        Expr cnf = this.c1.convertToCNF();
+        Expr cnf = this.expr.convertToCNF();
 
         if (cnf instanceof Atomic)
             return new Not(cnf);
@@ -45,80 +45,80 @@ class Not extends Expr {
 
     @Override
     public Expr deMorgan(){
-        return c1.deMorgan();
+        return expr.deMorgan();
     }
 
     @Override
     public Expr lawOfDistribution(Expr left) {
-        if (c1 instanceof Atomic) {
+        if (expr instanceof Atomic) {
             if (left instanceof Atomic)
                 return new Or(this,left);
             return left.lawOfDistribution(this);
         }
         System.out.println("shouldn't happpend");
-        return c1.lawOfDistribution(left);
+        return expr.lawOfDistribution(left);
     }
 
     @Override
     public String toInputFormat() {
-        return "~" + c1.toInputFormat();
+        return "~" + expr.toInputFormat();
     }
 
     @Override
     public String toSATFormat() {
-        return "¬" + c1.toInputFormat();
+        return "¬" + expr.toInputFormat();
     }
 }
 
 class And extends Expr {
-    Expr c1, c2;
+    Expr left, right;
 
     And(Expr c1, Expr c2) {
-        this.c1 = c1;
-        this.c2 = c2;
+        this.left = c1;
+        this.right = c2;
     }
 
     @Override
     public Expr convertToCNF() {
-        Expr c1 = this.c1.convertToCNF();
-        Expr c2 = this.c2.convertToCNF();
+        Expr c1 = this.left.convertToCNF();
+        Expr c2 = this.right.convertToCNF();
 
         return new And(c1, c2);
     }
 
     @Override
     public Expr deMorgan() {
-        return new Or(new Not(c1.deMorgan()), new Not(c2.deMorgan()));
+        return new Or(new Not(left.deMorgan()), new Not(right.deMorgan()));
     }
 
     @Override
     public Expr lawOfDistribution(Expr left){
-        return new And(new Parenthesis(c1.lawOfDistribution(left)),new Parenthesis(c2.lawOfDistribution(left)));
+        return new And(new Parenthesis(this.left.lawOfDistribution(left)),new Parenthesis(right.lawOfDistribution(left)));
     }
 
     @Override
     public String toInputFormat() {
-        return c1.toInputFormat() + " & " + c2.toInputFormat();
+        return left.toInputFormat() + " & " + right.toInputFormat();
     }
 
     @Override
     public String toSATFormat() {
-        return c1.toInputFormat() + " ∧ " + c2.toInputFormat();
+        return left.toInputFormat() + " ∧ " + right.toInputFormat();
     }
 }
 
 class Or extends Expr {
-    Expr c1, c2;
+    Expr left, right;
 
     Or(Expr c1, Expr c2) {
-        this.c1 = c1;
-        this.c2 = c2;
+        this.left = c1;
+        this.right = c2;
     }
 
     @Override
     public Expr convertToCNF() {
-        Expr c1 = this.c1.convertToCNF();
-        Expr c2 = this.c2.convertToCNF();
+        Expr c1 = this.left.convertToCNF();
+        Expr c2 = this.right.convertToCNF();
 
         if (c1 instanceof Parenthesis || c2 instanceof Parenthesis) {
             return c1.lawOfDistribution(c2);
@@ -129,48 +129,48 @@ class Or extends Expr {
 
     @Override
     public Expr lawOfDistribution(Expr left) {
-        return new Or(left, c2.lawOfDistribution(left));
+        return new Or(left, right.lawOfDistribution(left));
     }
 
     @Override
     public Expr deMorgan(){
-        return new And(new Not(c1.deMorgan()), new Not(c2.deMorgan()));
+        return new And(new Not(left.deMorgan()), new Not(right.deMorgan()));
     }
 
     @Override
     public String toInputFormat() {
-        return c1.toInputFormat() + " | " + c2.toInputFormat();
+        return left.toInputFormat() + " | " + right.toInputFormat();
     }
 
     @Override
     public String toSATFormat() {
-        return c1.toInputFormat() + " ∨ " + c2.toInputFormat();
+        return left.toInputFormat() + " ∨ " + right.toInputFormat();
     }
 }
 
 class Bimp extends Expr {
-    Expr c1, c2;
+    Expr left, right;
 
     Bimp(Expr c1, Expr c2) {
-        this.c1 = c1;
-        this.c2 = c2;
+        this.left = c1;
+        this.right = c2;
     }
 
     @Override
     public Expr convertToCNF() {
-        Expr c1 = this.c1.convertToCNF();
-        Expr c2 = this.c2.convertToCNF();
+        Expr c1 = this.left.convertToCNF();
+        Expr c2 = this.right.convertToCNF();
         return new And(new Parenthesis(new Imp(c1, c2)), new Parenthesis(new Imp(c2, c1))).convertToCNF();
     }
 
     @Override
     public String toInputFormat() {
-        return c1.toInputFormat() + " <=> " + c2.toInputFormat();
+        return left.toInputFormat() + " <=> " + right.toInputFormat();
     }
 
     @Override
     public String toSATFormat() {
-        return c1.toInputFormat() + " ↔ " + c2.toInputFormat();
+        return left.toInputFormat() + " ↔ " + right.toInputFormat();
     }
 
     @Override
@@ -189,26 +189,26 @@ class Bimp extends Expr {
 }
 
 class Imp extends Expr {
-    Expr c1, c2;
+    Expr left, right;
 
     Imp(Expr c1, Expr c2) {
-        this.c1 = c1;
-        this.c2 = c2;
+        this.left = c1;
+        this.right = c2;
     }
 
     @Override
     public Expr convertToCNF() {
-        return new Parenthesis(new Or(new Not(this.c1), this.c2)).convertToCNF();
+        return new Parenthesis(new Or(new Not(this.left), this.right)).convertToCNF();
     }
 
     @Override
     public String toInputFormat() {
-        return c1.toInputFormat() + " => " + c2.toInputFormat();
+        return left.toInputFormat() + " => " + right.toInputFormat();
     }
 
     @Override
     public String toSATFormat() {
-        return c1.toInputFormat() + " → " + c2.toInputFormat();
+        return left.toInputFormat() + " → " + right.toInputFormat();
     }
 
     @Override
