@@ -1,23 +1,17 @@
 package View;
 
+import Controller.Strategy;
 import Model.IKnowledgeBase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 public class TUI implements IView{
     BufferedReader input;
 
     public TUI(){
         input = new BufferedReader(new InputStreamReader(System.in));
-    }
-    @Override
-    public void displayBeliefs(List<String> list) {
-        for (String s : list){
-            System.out.println(s);
-        }
     }
 
     @Override
@@ -59,6 +53,29 @@ public class TUI implements IView{
     @Override
     public void displayKnowledgeBase(IKnowledgeBase data) {
         System.out.println(data.toString());
+    }
+
+    @Override
+    public void displayMessage(String message) {
+        System.out.println(message);
+    }
+
+    @Override
+    public Strategy changeStrategy() throws IOException {
+        System.out.println("Select a strategy, but typing the number:");
+        System.out.println("(0)\t-\tTRUST_NEW");
+        System.out.println("(1)\t-\tTRUST_OLD");
+        System.out.println("(2)\t-\tTRUST_LONG");
+        System.out.println("(3)\t-\tTRUST_SHORT");
+
+        String in = getCommand();
+        if (in.length() == 1 && in.charAt(0) >= '0' && in.charAt(0) < '4') {
+            Strategy s = Strategy.getStrategy(Character.getNumericValue(in.charAt(0)));
+            System.out.println(s);
+            return s;
+        }
+        System.out.println("error, wrong input, sticking with trust oldest");
+        return Strategy.TRUST_OLD;
     }
 
     @Override

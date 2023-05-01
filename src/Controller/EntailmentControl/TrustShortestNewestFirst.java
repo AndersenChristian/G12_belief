@@ -20,7 +20,7 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
     }
 
     @Override
-    public void removeEntailments(IKnowledgeBase data) {
+    public void removeEntailments(IKnowledgeBase data, IKnowledgeBase original) {
 
         // Copy the knowledge base
         Stream.of(data.getAllData()).forEach(d -> remainClaus.add(new Data(d)));
@@ -149,5 +149,10 @@ public class TrustShortestNewestFirst implements IEntailmentCheck {
         }
 
         if (remainClaus.isEmpty()) return;
+    }
+
+    @Override
+    public Data[] whatWasRemoved() {
+        return new Data[0]; //TODO
     }
 }

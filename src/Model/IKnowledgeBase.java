@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.Strategy;
+
 public interface IKnowledgeBase{
 
     void addData(String[] list);
@@ -13,5 +15,6 @@ public interface IKnowledgeBase{
     Data getDataAtIndex(int index);
     int getValueAtIndex(int index);
     Data[] getAllData();
+    IKnowledgeBase sort(Strategy strategy);
 
 }
