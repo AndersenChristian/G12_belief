@@ -176,12 +176,14 @@ class Bimp extends Expr {
     @Override
     public Expr deMorgan() {
         // Should not happen
+        System.out.println("Biimplication node visited. Should not happen when calling deMorgan()");
         return null;
     }
 
     @Override
     Expr lawOfDistribution(Expr left) {
         // Should not happen
+        System.out.println("Bi implication node visited. Should not happen when calling lawOfDistribution()");
         return null;
     }
 }
@@ -212,12 +214,14 @@ class Imp extends Expr {
     @Override
     public Expr deMorgan() {
         // Should not happen
+        System.out.println("Implication node visited. Should not happen when calling deMorgan()");
         return null;
     }
 
     @Override
     Expr lawOfDistribution(Expr left) {
         // Should not happen
+        System.out.println("Implication node visited. Should not happen when calling lawOfDistribution()");
         return null;
     }
 }
