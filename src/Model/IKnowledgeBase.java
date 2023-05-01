@@ -1,11 +1,17 @@
 package Model;
 
-public interface IKnowledgeBase {
+public interface IKnowledgeBase{
+
     void addData(String[] list);
+    void addData(String[] list, int value);
     void addData(String s);
+    void addData(String s, int value);
     void removeDataAtIndex(int index);
+    void removeData(Data data);
     int getIndex(String s);
-    String getDataAtIndex(int index);
-    String[] getAllData();
+    int getSize();
+    Data getDataAtIndex(int index);
+    int getValueAtIndex(int index);
+    Data[] getAllData();
 
 }
